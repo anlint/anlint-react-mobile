@@ -1,1 +1,1 @@
-# anlint-react
+#anlint react-native
