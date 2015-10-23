@@ -21,7 +21,8 @@ var {
 
 // var AppRegistry = React.AppRegistry;
 //var request_url = "https://raw.githubusercontent.com/facebook/react-native/master/docs/MoviesExample.json";
-var request_url = 'http://leosblackboard.sinaapp.com/anlint'
+var request_url = 'http://leosblackboard.sinaapp.com/anlintapi'
+//var api_url = 'https://www.anlint.com/api/v1/serv/getall'
 
 var mainScreen = React.createClass({
   getInitialState: function() {
@@ -47,6 +48,21 @@ var mainScreen = React.createClass({
       })
       .done();
   },
+
+
+  _reload() {
+    // fetch Data
+    fetch(request_url)
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(responseData),
+          loaded: true
+        });
+      })
+      .done();
+  },
+
 
   _itemPressed(articleTitle, articleLink) {
     var url = articleLink;
@@ -85,8 +101,8 @@ var mainScreen = React.createClass({
             <Image style={styles.thumbnail} source={{ uri: rowData.thumbnail }} />
             <View  style={styles.textContainer}>
               <Text style={styles.title} numberOfLines={2}>{rowData.title}</Text>
-              <Text style={styles.summary} numberOfLines={3}>{rowData.summary}</Text>
             </View>
+            
           </View>
           <View style={styles.separator}/>
         </View>
@@ -120,28 +136,31 @@ var styles = StyleSheet.create({
     marginBottom: 20
   },
   rowContainner: {
-    flexDirection: 'row',
-    padding: 10,
+    flexDirection: 'column',
+    padding: 0,
+    backgroundColor: 'white',
+    marginTop: 10
   },
   textContinner: {
     flex: 1,
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 18,
-    color: '#000000',
-    width: 125 * PixelRatio.get()
+    fontSize: 14,
+    color: '#333444',
+    padding: 5,
+    width: 190 * PixelRatio.get()
   },
   summary: {
     fontSize: 13.5,
     color: '#656565',
-    width: 120 * PixelRatio.get(),
-    marginTop: 5
+    width: 185 * PixelRatio.get(),
+    padding: 5,
   },
   thumbnail: {
-    width: 49 * PixelRatio.get(),
-    height: 49 * PixelRatio.get(),
-    marginRight: 10
+    width: 190 * PixelRatio.get(),
+    height: 80 * PixelRatio.get(),
+    // marginRight: 10
   },
   separator: {
     height: 1 / PixelRatio.get(),
