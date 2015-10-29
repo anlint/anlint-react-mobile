@@ -6,6 +6,7 @@
 
 var React = require('react-native');
 var mainScreen = require('./App/Views/Home/mainScreen');
+var LifeStyle = require('./App/Views/Home/lifeStyle')
 
 
 
@@ -23,6 +24,82 @@ var {
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 var RefreshableListView = require('react-native-refreshable-listview');
 var deviceWidth = Dimensions.get('window').width;
+
+
+var anlint = React.createClass({
+  getInitialState: function() {
+    return {
+      selectedTab: 'lifeTab',
+      notifCount: 0,
+      presses: 0,
+    };
+  },
+
+  _renderContent: function(color: string, pageText: string, num?: number) {
+    return (
+      <View style={[styles.tabContent, {backgroundColor: color}]}>
+        <Text>{pageText}</Text>
+        <Text>{num} re-renders of the {pageText}</Text>
+      </View>
+    );
+  },
+
+  render() {
+    return (
+      <TabBarIOS
+        tintColor="#e74c3c"
+        barTintColor="#f9f9f9"
+        translucent={false} >
+        <TabBarIOS.Item
+          title="生活"
+          systemIcon="favorites"
+          selected={this.state.selectedTab === 'lifeTab'}
+          onPress={() => {
+            this.setState({
+              selectedTab: 'lifeTab',
+            });
+          }}>
+          <NavigatorIOS style={styles.container}
+              ref='INDEX_NAV'
+              initialRoute={{
+                title: 'anlint',
+                component: require('./App/Views/Home/mainScreen')
+              }}
+              shadowHidden={true}
+            translucent={false}
+            barTintColor='#e74c3c'
+            titleTextColor='#ffffff'
+            tintColor='#ffffff'/>
+        </TabBarIOS.Item>
+
+        <TabBarIOS.Item
+          title="方式"
+          systemIcon="more"
+          selected={this.state.selectedTab === 'aboutTab'}
+          onPress={() => {
+                    this.setState({
+                      selectedTab: 'aboutTab'
+                    });
+                  }}>
+          
+          <NavigatorIOS style={styles.container}
+              initialRoute={{
+                title: 'anlint',
+                component: require('./App/Views/Home/lifeStyle')
+              }}
+              shadowHidden={true}
+              translucent={false}
+              barTintColor='#e74c3c'
+              titleTextColor='#ffffff'
+              tintColor='#ffffff'/>
+
+        </TabBarIOS.Item>
+      </TabBarIOS>
+
+    );
+  }
+});
+
 
 var styles = React.StyleSheet.create({
   container: {
@@ -54,82 +131,6 @@ var styles = React.StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 3,
   },
-});
-
-var anlint = React.createClass({
-  getInitialState: function() {
-    return {
-      selectedTab: 'lifeTab',
-      notifCount: 0,
-      presses: 0,
-    };
-  },
-
-  _renderContent: function(color: string, pageText: string, num?: number) {
-    return (
-      <View style={[styles.tabContent, {backgroundColor: color}]}>
-        <Text>{pageText}</Text>
-        <Text>{num} re-renders of the {pageText}</Text>
-      </View>
-    );
-  },
-
-  render() {
-    return (
-      <TabBarIOS
-        tintColor="white"
-        barTintColor="#d52b2a">
-        <TabBarIOS.Item
-          title="生活方式"
-          systemIcon="favorites"
-          selected={this.state.selectedTab === 'lifeTab'}
-          onPress={() => {
-            this.setState({
-              selectedTab: 'lifeTab',
-            });
-          }}>
-          <NavigatorIOS style={styles.container}
-              tintColor={'#333444'}
-              initialRoute={{
-                title: '生活',
-                component: require('./App/Views/Home/mainScreen')
-              }}
-              itemWrapperStyle={styles.navigator} />
-        </TabBarIOS.Item>
-
-        <TabBarIOS.Item
-          title="关于"
-          systemIcon="more"
-          selected={this.state.selectedTab === 'aboutTab'}
-          onPress={() => {
-                    this.setState({
-                      selectedTab: 'aboutTab'
-                    });
-                  }}>
-          
-          <ScrollableTabView>
-            <ScrollView tabLabel="               热门               " style={styles.tabView}>
-              <View style={styles.card}>
-                <Text>热门</Text>
-              </View>
-            </ScrollView>
-            <ScrollView tabLabel="          生活               " style={styles.tabView}>
-              <View style={styles.card}>
-                <Text>生活</Text>
-              </View>
-            </ScrollView>
-            <ScrollView tabLabel="          方式               " style={styles.tabView}>
-              <View style={styles.card}>
-                <Text>方式</Text>
-              </View>
-            </ScrollView>
-          </ScrollableTabView>
-
-        </TabBarIOS.Item>
-      </TabBarIOS>
-
-    );
-  }
 });
 
 

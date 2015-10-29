@@ -1,4 +1,4 @@
-# anlint react-native
+# anlint react-native 0.1.0
 > [安邻网][1]ios客户端
 
 
@@ -66,6 +66,10 @@ minify(默认的 false)——只要不通过 UglifyJS 传输 JS 代码。
 2. 菜单栏配色改为和安邻网相似的红色
 3. 新增App图标
 
+### 0.1.0
+1. 使用anlint的api接口来访问数据
+2. 优化了navigator和tabview的显示效果
+3. 还是存在一些bug
 
 
 
@@ -73,10 +77,13 @@ minify(默认的 false)——只要不通过 UglifyJS 传输 JS 代码。
 
 ## to do list
 - ~~加入顶部二级导航栏~~
-- 代码重构，进一步模块化
 - 首页UI调整（改为卡片模式）
 - 实现加载缓存判断
+- 代码重构，进一步模块化
+- 适配更多尺寸的屏幕
 
+## bug list
+- 滚到底部有一部分内容显示不了
 
 
 

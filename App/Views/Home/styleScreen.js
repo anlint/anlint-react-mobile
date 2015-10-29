@@ -20,10 +20,10 @@ var {
 } = React;
 
 // var AppRegistry = React.AppRegistry;
-var request_url = 'http://leosblackboard.sinaapp.com/anlintapi'
-var api_url = 'https://www.anlint.com/api/v1/serv/getall'
+// var request_url = 'http://leosblackboard.sinaapp.com/anlintapi'
+var api_url = 'https://www.anlint.com/api/v1/lint/getall'
 
-var mainScreen = React.createClass({
+var style = React.createClass({
   getInitialState: function() {
     return {
       //articles: []
@@ -40,8 +40,9 @@ var mainScreen = React.createClass({
     fetch(api_url)
       .then((response) => response.json())
       .then((responseData) => {
+        console.log(responseData.Lints);
         this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(responseData.Servs),
+          dataSource: this.state.dataSource.cloneWithRows(responseData.Lints),
           loaded: true
         });
       })
@@ -55,7 +56,7 @@ var mainScreen = React.createClass({
       .then((response) => response.json())
       .then((responseData) => {
         this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(responseData),
+          dataSource: this.state.dataSource.cloneWithRows(responseData.Lints),
           loaded: true
         });
       })
@@ -63,8 +64,8 @@ var mainScreen = React.createClass({
   },
 
 
-  _itemPressed(articleTitle, articleLink) {
-    var url = articleLink;
+  _itemPressed(articleTitle, articleId) {
+    var url = "https://www.anlint.com/lifestyle/lints/" + articleId;
     var articleTitle = "文章";
 
     this.props.navigator.push({
@@ -91,15 +92,14 @@ var mainScreen = React.createClass({
   },
 
   renderItem: function(rowData) {
-    //var movie = {title:'美食 | 别辜负冰淇淋的一片盛情', date:'2015-09-18', posters: {thumbnail: 'https://dn-anlint0.qbox.me/FseCOstTejRXgca9NYcwW2KE4ueA'}}
     return (
-      <TouchableHighlight onPress={() => this._itemPressed(rowData.title, rowData.link)}
+      <TouchableHighlight onPress={() => this._itemPressed(rowData.id, rowData.id)}
           underlayColor='#dddddd'>
         <View>
           <View style={styles.rowContainner}>
             <Image style={styles.thumbnail} source={{ uri: rowData.pic }} />
             <View  style={styles.textContainer}>
-              <Text style={styles.title} numberOfLines={2}>{rowData.title}</Text>
+              <Text style={styles.title} numberOfLines={2}>{rowData.id}</Text>
             </View>
             
           </View>
@@ -152,11 +152,9 @@ var styles = StyleSheet.create({
   },
   summary: {
     fontSize: 13.5,
-    //color: '#656565',
-    color: 'white',
+    color: '#656565',
     width: 185 * PixelRatio.get(),
     padding: 5,
-    backgroundColor: ''
   },
   thumbnail: {
     width: 190 * PixelRatio.get(),
@@ -164,9 +162,9 @@ var styles = StyleSheet.create({
     // marginRight: 10
   },
   separator: {
-    height: 10 / PixelRatio.get(),
+    height: 1 / PixelRatio.get(),
     backgroundColor: '#dddddd'
   },
 });
 
-module.exports = mainScreen;
+module.exports = style;
