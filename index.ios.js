@@ -5,7 +5,6 @@
 'use strict';
 
 var React = require('react-native');
-var mainScreen = require('./App/Views/Home/mainScreen');
 var LifeStyle = require('./App/Views/Home/lifeStyle')
 
 
@@ -46,56 +45,17 @@ var anlint = React.createClass({
 
   render() {
     return (
-      <TabBarIOS
-        tintColor="#e74c3c"
-        barTintColor="#f9f9f9"
-        translucent={false} >
-        <TabBarIOS.Item
-          title="生活"
-          systemIcon="favorites"
-          selected={this.state.selectedTab === 'lifeTab'}
-          onPress={() => {
-            this.setState({
-              selectedTab: 'lifeTab',
-            });
-          }}>
-          <NavigatorIOS style={styles.container}
-              ref='INDEX_NAV'
-              initialRoute={{
-                title: 'anlint',
-                component: require('./App/Views/Home/mainScreen')
-              }}
-              shadowHidden={true}
-            translucent={false}
-            barTintColor='#e74c3c'
-            titleTextColor='#ffffff'
-            tintColor='#ffffff'/>
-        </TabBarIOS.Item>
-
-        <TabBarIOS.Item
-          title="方式"
-          systemIcon="more"
-          selected={this.state.selectedTab === 'aboutTab'}
-          onPress={() => {
-                    this.setState({
-                      selectedTab: 'aboutTab'
-                    });
-                  }}>
-          
-          <NavigatorIOS style={styles.container}
-              initialRoute={{
-                title: 'anlint',
-                component: require('./App/Views/Home/lifeStyle')
-              }}
-              shadowHidden={true}
-              translucent={false}
-              barTintColor='#e74c3c'
-              titleTextColor='#ffffff'
-              tintColor='#ffffff'/>
-
-        </TabBarIOS.Item>
-      </TabBarIOS>
-
+      <NavigatorIOS style={styles.container}
+        ref='INDEX_NAV'
+        initialRoute={{
+          title: '安邻',
+          component: require('./App/Views/Home/lifeStyle')
+        }}
+        shadowHidden={true}
+        translucent={false}
+        barTintColor='#e74c3c'
+        titleTextColor='#ffffff'
+        tintColor='#ffffff'/>
     );
   }
 });

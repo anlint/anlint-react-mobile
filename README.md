@@ -71,6 +71,11 @@ minify(默认的 false)——只要不通过 UglifyJS 传输 JS 代码。
 2. 优化了navigator和tabview的显示效果
 3. 还是存在一些bug
 
+### 0.2.2
+1. 去掉了底部的TabBar
+2. 改进了方式页的显示方式
+3. 新增了下拉刷新
+
 
 
 
@@ -84,6 +89,9 @@ minify(默认的 false)——只要不通过 UglifyJS 传输 JS 代码。
 
 ## bug list
 - 滚到底部有一部分内容显示不了
+－ ListView的卡片式布局，右边的padding没有显示出来
+－ ScrollTabView里嵌套的页面点击StatusBar没有办法滚动到顶部，WebView页面则没有问题
+－ 下拉刷新还有一些bug
 
 
 

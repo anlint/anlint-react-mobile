@@ -12,7 +12,8 @@ var {
   NavigatorIOS,
   TouchableHighlight,
   ScrollView,
-  Dimensions
+  Dimensions,
+  StatusBarIOS
 } = React;
 
 
@@ -20,13 +21,14 @@ var ScrollableTabView = require('react-native-scrollable-tab-view');
 var RefreshableListView = require('react-native-refreshable-listview');
 var deviceWidth = Dimensions.get('window').width;
 
-var LifeScreen = require('./mainScreen');
+var LifeScreen = require('./lifeScreen');
 var StyleScreen = require('./styleScreen');
 var CustomTabBar = require('./CustomTabBar');
 
 
 var lifeStyle = React.createClass({
   getInitialState: function() {
+    StatusBarIOS.setStyle(1);   // 1是白色，0是默认的黑色
     return {
       selectedTab: 'lifeTab',
       notifCount: 0,
@@ -36,11 +38,13 @@ var lifeStyle = React.createClass({
   render() {
     return(
       <ScrollableTabView 
-        renderTabBar={() => <CustomTabBar someProp={'here'} />}
-        sceneContainerStyle={{ paddingBottom: 150 }}
-        edgeHitWidth={9999}>
-        <LifeScreen tabLabel="Life" navigator={this.props.navigator}/>
-        <StyleScreen tabLabel="Style" navigator={this.props.navigator}/>
+        renderTabBar = {() => <CustomTabBar someProp={'here'} />}
+        sceneContainerStyle = {{ paddingBottom: 0 }}
+        edgeHitWidth = {9999} >
+
+        <LifeScreen  tabLabel="生活" navigator={this.props.navigator}/>
+        <StyleScreen tabLabel="方式" navigator={this.props.navigator}/>
+
       </ScrollableTabView>
       );
   },

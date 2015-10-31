@@ -6,6 +6,7 @@
 
 var React = require('react-native');
 var ArticleView = require('../Web/webview');
+var RefreshableListView = require('react-native-refreshable-listview');
 
 var {
   StyleSheet,
@@ -17,11 +18,13 @@ var {
   PixelRatio,
   NavigatorIOS,
   TouchableHighlight,
+  Dimensions
 } = React;
 
 // var AppRegistry = React.AppRegistry;
 // var request_url = 'http://leosblackboard.sinaapp.com/anlintapi'
-var api_url = 'https://www.anlint.com/api/v1/lint/getall'
+var api_url = 'https://www.anlint.com/api/v1/lint/getall';
+var deviceWidth = Dimensions.get('window').width;
 
 var style = React.createClass({
   getInitialState: function() {
@@ -40,7 +43,6 @@ var style = React.createClass({
     fetch(api_url)
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData.Lints);
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(responseData.Lints),
           loaded: true
@@ -68,19 +70,11 @@ var style = React.createClass({
     var url = "https://www.anlint.com/lifestyle/lints/" + articleId;
     var articleTitle = "文章";
 
-    this.props.navigator.push({
-      title: articleTitle,
-      component: ArticleView,
-      passProps: {url: url}
-    });
-  },
-
-  render: function() {
-    if (this.state.loaded) {
-      return this.renderList();
-    } else {
-      return this.renderLoadingView();
-    }
+    // this.props.navigator.push({
+    //   title: articleTitle,
+    //   component: ArticleView,
+    //   passProps: {url: url}
+    // });
   },
 
   renderList: function() {
@@ -97,11 +91,11 @@ var style = React.createClass({
           underlayColor='#dddddd'>
         <View>
           <View style={styles.rowContainner}>
-            <Image style={styles.thumbnail} source={{ uri: rowData.pic }} />
             <View  style={styles.textContainer}>
-              <Text style={styles.title} numberOfLines={2}>{rowData.id}</Text>
+              <Text style={styles.title} numberOfLines={2}>{rowData.pubname}</Text>
+              <Text style={styles.summary} numberOfLines={4}>{rowData.text}</Text>
             </View>
-            
+            <Image style={styles.thumbnail} source={{ uri: rowData.pic }} />
           </View>
           <View style={styles.separator}/>
         </View>
@@ -112,11 +106,29 @@ var style = React.createClass({
   renderLoadingView: function() {
     return (
       <View style={styles.loadingContainner}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>正在加载...</Text>
         <ActivityIndicatorIOS />
       </View>
       );
-  }
+  },
+
+
+  render: function() {
+    if (this.state.loaded) {
+      return(
+        <RefreshableListView
+          dataSource={this.state.dataSource}
+          renderRow={this.renderItem}
+          loadData={this.renderLoadingView}
+          style={styles.topicListView}
+          refreshDescription="正在刷新..."
+          minDisplayTime={500}
+          minPulldownDistance={80}
+          minBetweenTime={2000} />);
+    } else {
+      return this.renderLoadingView();
+    }
+  },
 
 });
 
@@ -135,34 +147,35 @@ var styles = StyleSheet.create({
     marginBottom: 20
   },
   rowContainner: {
-    flexDirection: 'column',
-    padding: 0,
-    backgroundColor: 'white',
-    marginTop: 0
+    flexDirection: 'row',
+    padding: 10,
   },
   textContinner: {
-    flex: 1,
+    flex: 3,
+    width: deviceWidth * 0.65,
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 14,
-    color: '#333444',
-    padding: 5,
-    width: 190 * PixelRatio.get()
+    fontSize: 18,
+    color: '#000000',
+    //width: 125 * PixelRatio.get(),
+    width: deviceWidth * 0.65,
   },
   summary: {
     fontSize: 13.5,
     color: '#656565',
-    width: 185 * PixelRatio.get(),
-    padding: 5,
+    //width: 120 * PixelRatio.get(),
+    width: deviceWidth * 0.65,
+    marginTop: 5
   },
   thumbnail: {
-    width: 190 * PixelRatio.get(),
-    height: 80 * PixelRatio.get(),
-    // marginRight: 10
+    // width: 49 * PixelRatio.get(),
+    height: deviceWidth * 0.3,
+    width: deviceWidth * 0.3,
+    marginRight: 10
   },
   separator: {
-    height: 1 / PixelRatio.get(),
+    height: 10 / PixelRatio.get(),
     backgroundColor: '#dddddd'
   },
 });

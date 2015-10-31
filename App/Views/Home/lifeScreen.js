@@ -6,6 +6,7 @@
 
 var React = require('react-native');
 var ArticleView = require('../Web/webview');
+var RefreshableListView = require('react-native-refreshable-listview');
 
 var {
   StyleSheet,
@@ -17,14 +18,19 @@ var {
   PixelRatio,
   NavigatorIOS,
   TouchableHighlight,
+  Dimensions
 } = React;
 
-// var AppRegistry = React.AppRegistry;
-var request_url = 'http://leosblackboard.sinaapp.com/anlintapi'
-var api_url = 'https://www.anlint.com/api/v1/serv/getall'
+var deviceWidth = Dimensions.get('window').width;
 
-var mainScreen = React.createClass({
+// var AppRegistry = React.AppRegistry;
+var request_url = 'http://leosblackboard.sinaapp.com/anlintapi';
+var api_url = 'https://www.anlint.com/api/v1/serv/getall';
+
+
+var lifeScreen = React.createClass({
   getInitialState: function() {
+    console.log(deviceWidth);
     return {
       //articles: []
       dataSource: new ListView.DataSource({
@@ -65,7 +71,7 @@ var mainScreen = React.createClass({
 
   _itemPressed(articleTitle, articleLink) {
     var url = articleLink;
-    var articleTitle = "文章";
+    // var articleTitle = "文章";
 
     this.props.navigator.push({
       title: articleTitle,
@@ -74,17 +80,10 @@ var mainScreen = React.createClass({
     });
   },
 
-  render: function() {
-    if (this.state.loaded) {
-      return this.renderList();
-    } else {
-      return this.renderLoadingView();
-    }
-  },
-
   renderList: function() {
     return(
         <ListView
+          style = {styles.topicListView}
           dataSource = {this.state.dataSource}
           renderRow = {this.renderItem} />
       );
@@ -96,10 +95,10 @@ var mainScreen = React.createClass({
       <TouchableHighlight onPress={() => this._itemPressed(rowData.title, rowData.link)}
           underlayColor='#dddddd'>
         <View>
-          <View style={styles.rowContainner}>
+          <View style={styles.topicCard}>
             <Image style={styles.thumbnail} source={{ uri: rowData.pic }} />
             <View  style={styles.textContainer}>
-              <Text style={styles.title} numberOfLines={2}>{rowData.title}</Text>
+              <Text style={styles.topicTitle} numberOfLines={2}>{rowData.title}</Text>
             </View>
             
           </View>
@@ -112,11 +111,28 @@ var mainScreen = React.createClass({
   renderLoadingView: function() {
     return (
       <View style={styles.loadingContainner}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>正在加载...</Text>
         <ActivityIndicatorIOS />
       </View>
       );
-  }
+  },
+
+  render: function() {
+    if (this.state.loaded) {
+      return(
+        <RefreshableListView
+          dataSource={this.state.dataSource}
+          renderRow={this.renderItem}
+          loadData={this.renderLoadingView}
+          style={styles.topicListView}
+          refreshDescription="正在刷新..."
+          minDisplayTime={500}
+          minPulldownDistance={80}
+          minBetweenTime={2000} />);
+    } else {
+      return this.renderLoadingView();
+    }
+  },
 
 });
 
@@ -138,7 +154,6 @@ var styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 0,
     backgroundColor: 'white',
-    marginTop: 0
   },
   textContinner: {
     flex: 1,
@@ -148,25 +163,52 @@ var styles = StyleSheet.create({
     fontSize: 14,
     color: '#333444',
     padding: 5,
-    width: 190 * PixelRatio.get()
+    width: deviceWidth - 20
   },
   summary: {
     fontSize: 13.5,
     //color: '#656565',
     color: 'white',
-    width: 185 * PixelRatio.get(),
+    width: deviceWidth - 20,
     padding: 5,
     backgroundColor: ''
   },
   thumbnail: {
-    width: 190 * PixelRatio.get(),
-    height: 80 * PixelRatio.get(),
-    // marginRight: 10
+    //width: 170 * PixelRatio.get(),
+    //height: 100 * PixelRatio.get(),
+    width: deviceWidth - 28,
+    height: 150,
   },
   separator: {
-    height: 10 / PixelRatio.get(),
-    backgroundColor: '#dddddd'
+    height: 0 / PixelRatio.get(),
+    backgroundColor: '#dddddd',
   },
+
+  topicListView: {
+    flex: 1,
+    backgroundColor: '#ebeced',   //#f0f0f0
+    padding: 8,
+    // overflow: 'hidden',
+  },
+  topicCard: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: 6,
+    backgroundColor: '#ffffff',
+    marginBottom: 5,
+    borderColor: '#f0f0f0',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderRadius: 0
+  },
+  topicTitle: {
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    // width: deviceWidth - 20,
+    color: '#333333'
+  }
 });
 
-module.exports = mainScreen;
+module.exports = lifeScreen;

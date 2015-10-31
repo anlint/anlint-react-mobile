@@ -1392,14 +1392,13 @@ GLOBAL.document.createElement = null;}
 
 GLOBAL.MutationObserver = undefined;})(
 this);
-__d('anlint/index.ios.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Home/mainScreen.js","react-native-scrollable-tab-view/index.js","react-native-refreshable-listview/index.js","anlint/App/Views/Home/mainScreen.js","anlint/App/Views/Home/lifeStyle.js","anlint/App/Views/Home/lifeStyle.js"],function(global, require, module, exports) {  'use strict';
+__d('anlint/index.ios.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Home/lifeStyle.js","react-native-scrollable-tab-view/index.js","react-native-refreshable-listview/index.js","anlint/App/Views/Home/lifeStyle.js"],function(global, require, module, exports) {  'use strict';
 
 
 
 
 
 var React=require('react-native/Libraries/react-native/react-native.js');
-var mainScreen=require('anlint/App/Views/Home/mainScreen.js');
 var LifeStyle=require('anlint/App/Views/Home/lifeStyle.js');var 
 
 
@@ -1438,58 +1437,19 @@ React.createElement(Text,null,num,' re-renders of the ',pageText)));},
 
 
 
-render:function(){var _this=this;
+render:function(){
 return (
-React.createElement(TabBarIOS,{
-tintColor:'#e74c3c',
-barTintColor:'#f9f9f9',
-translucent:false},
-React.createElement(TabBarIOS.Item,{
-title:'生活',
-systemIcon:'favorites',
-selected:this.state.selectedTab === 'lifeTab',
-onPress:function(){
-_this.setState({
-selectedTab:'lifeTab'});}},
-
-
 React.createElement(NavigatorIOS,{style:styles.container,
 ref:'INDEX_NAV',
 initialRoute:{
-title:'anlint',
-component:require('anlint/App/Views/Home/mainScreen.js')},
-
-shadowHidden:true,
-translucent:false,
-barTintColor:'#e74c3c',
-titleTextColor:'#ffffff',
-tintColor:'#ffffff'})),
-
-
-React.createElement(TabBarIOS.Item,{
-title:'方式',
-systemIcon:'more',
-selected:this.state.selectedTab === 'aboutTab',
-onPress:function(){
-_this.setState({
-selectedTab:'aboutTab'});}},
-
-
-
-React.createElement(NavigatorIOS,{style:styles.container,
-initialRoute:{
-title:'anlint',
+title:'安邻',
 component:require('anlint/App/Views/Home/lifeStyle.js')},
 
 shadowHidden:true,
 translucent:false,
 barTintColor:'#e74c3c',
 titleTextColor:'#ffffff',
-tintColor:'#ffffff'}))));}});
-
-
-
-
+tintColor:'#ffffff'}));}});
 
 
 
@@ -51958,211 +51918,7 @@ Object.keys(componentOrElement));}
 
 module.exports = findDOMNode;
 });
-__d('anlint/App/Views/Home/mainScreen.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Web/webview.js"],function(global, require, module, exports) {  'use strict';
-
-
-
-
-
-var React=require('react-native/Libraries/react-native/react-native.js');
-var ArticleView=require('anlint/App/Views/Web/webview.js');var 
-
-
-StyleSheet=
-
-
-
-
-
-
-
-
-React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var ListView=React.ListView;var ActivityIndicatorIOS=React.ActivityIndicatorIOS;var PixelRatio=React.PixelRatio;var NavigatorIOS=React.NavigatorIOS;var TouchableHighlight=React.TouchableHighlight;
-
-
-var request_url='http://leosblackboard.sinaapp.com/anlintapi';
-var api_url='https://www.anlint.com/api/v1/serv/getall';
-
-var mainScreen=React.createClass({displayName:'mainScreen',
-getInitialState:function(){
-return {
-
-dataSource:new ListView.DataSource({
-rowHasChanged:function(row1,row2){return row1 !== row2;}}),
-
-loaded:false};},
-
-
-
-
-componentDidMount:function(){var _this=this;
-
-fetch(api_url).
-then(function(response){return response.json();}).
-then(function(responseData){
-_this.setState({
-dataSource:_this.state.dataSource.cloneWithRows(responseData.Servs),
-loaded:true});}).
-
-
-done();},
-
-
-
-_reload:function(){var _this2=this;
-
-fetch(request_url).
-then(function(response){return response.json();}).
-then(function(responseData){
-_this2.setState({
-dataSource:_this2.state.dataSource.cloneWithRows(responseData),
-loaded:true});}).
-
-
-done();},
-
-
-
-_itemPressed:function(articleTitle,articleLink){
-var url=articleLink;
-var articleTitle="文章";
-
-this.props.navigator.push({
-title:articleTitle,
-component:ArticleView,
-passProps:{url:url}});},
-
-
-
-render:function(){
-if(this.state.loaded){
-return this.renderList();}else 
-{
-return this.renderLoadingView();}},
-
-
-
-renderList:function(){
-return (
-React.createElement(ListView,{
-dataSource:this.state.dataSource,
-renderRow:this.renderItem}));},
-
-
-
-renderItem:function(rowData){var _this3=this;
-
-return (
-React.createElement(TouchableHighlight,{onPress:function(){return _this3._itemPressed(rowData.title,rowData.link);},
-underlayColor:'#dddddd'},
-React.createElement(View,null,
-React.createElement(View,{style:styles.rowContainner},
-React.createElement(Image,{style:styles.thumbnail,source:{uri:rowData.pic}}),
-React.createElement(View,{style:styles.textContainer},
-React.createElement(Text,{style:styles.title,numberOfLines:2},rowData.title))),
-
-
-
-React.createElement(View,{style:styles.separator}))));},
-
-
-
-
-
-renderLoadingView:function(){
-return (
-React.createElement(View,{style:styles.loadingContainner},
-React.createElement(Text,{style:styles.loadingText},'Loading...'),
-React.createElement(ActivityIndicatorIOS,null)));}});
-
-
-
-
-
-
-
-
-var styles=StyleSheet.create({
-loadingContainner:{
-flex:1,
-flexDirection:'column',
-justifyContent:'center',
-alignItems:'center',
-backgroundColor:'#FFFFFF'},
-
-loadingText:{
-fontSize:14,
-marginBottom:20},
-
-rowContainner:{
-flexDirection:'column',
-padding:0,
-backgroundColor:'white',
-marginTop:0},
-
-textContinner:{
-flex:1},
-
-title:{
-fontWeight:'bold',
-fontSize:14,
-color:'#333444',
-padding:5,
-width:190 * PixelRatio.get()},
-
-summary:{
-fontSize:13.5,
-
-color:'white',
-width:185 * PixelRatio.get(),
-padding:5,
-backgroundColor:''},
-
-thumbnail:{
-width:190 * PixelRatio.get(),
-height:80 * PixelRatio.get()},
-
-
-separator:{
-height:10 / PixelRatio.get(),
-backgroundColor:'#dddddd'}});
-
-
-
-module.exports = mainScreen;
-});
-__d('anlint/App/Views/Web/webview.js',["react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  'use strict';
-
-var React=require('react-native/Libraries/react-native/react-native.js');var 
-
-StyleSheet=
-
-
-React.StyleSheet;var View=React.View;var WebView=React.WebView;
-
-var styles=StyleSheet.create({
-container:{
-flex:1,
-backgroundColor:'#F6F6EF',
-flexDirection:'column'}});
-
-
-
-var Web=React.createClass({displayName:'Web',
-render:function(){
-var url=this.props.url;
-
-return (
-React.createElement(View,{style:styles.container},
-React.createElement(WebView,{url:this.props.url})));}});
-
-
-
-
-
-module.exports = Web;
-});
-__d('anlint/App/Views/Home/lifeStyle.js',["react-native/Libraries/react-native/react-native.js","react-native-scrollable-tab-view/index.js","react-native-refreshable-listview/index.js","anlint/App/Views/Home/mainScreen.js","anlint/App/Views/Home/styleScreen.js","anlint/App/Views/Home/CustomTabBar.js"],function(global, require, module, exports) {  'use strict';
+__d('anlint/App/Views/Home/lifeStyle.js',["react-native/Libraries/react-native/react-native.js","react-native-scrollable-tab-view/index.js","react-native-refreshable-listview/index.js","anlint/App/Views/Home/lifeScreen.js","anlint/App/Views/Home/CustomTabBar.js","anlint/App/Views/Home/styleScreen.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -52177,20 +51933,22 @@ StyleSheet=
 
 
 
-React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var ListView=React.ListView;var PixelRatio=React.PixelRatio;var NavigatorIOS=React.NavigatorIOS;var TouchableHighlight=React.TouchableHighlight;var ScrollView=React.ScrollView;var Dimensions=React.Dimensions;
+
+React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var ListView=React.ListView;var PixelRatio=React.PixelRatio;var NavigatorIOS=React.NavigatorIOS;var TouchableHighlight=React.TouchableHighlight;var ScrollView=React.ScrollView;var Dimensions=React.Dimensions;var StatusBarIOS=React.StatusBarIOS;
 
 
 var ScrollableTabView=require('react-native-scrollable-tab-view/index.js');
 var RefreshableListView=require('react-native-refreshable-listview/index.js');
 var deviceWidth=Dimensions.get('window').width;
 
-var LifeScreen=require('anlint/App/Views/Home/mainScreen.js');
+var LifeScreen=require('anlint/App/Views/Home/lifeScreen.js');
 var StyleScreen=require('anlint/App/Views/Home/styleScreen.js');
 var CustomTabBar=require('anlint/App/Views/Home/CustomTabBar.js');
 
 
 var lifeStyle=React.createClass({displayName:'lifeStyle',
 getInitialState:function(){
+StatusBarIOS.setStyle(1);
 return {
 selectedTab:'lifeTab',
 notifCount:0,
@@ -52201,10 +51959,12 @@ render:function(){
 return (
 React.createElement(ScrollableTabView,{
 renderTabBar:function(){return React.createElement(CustomTabBar,{someProp:'here'});},
-sceneContainerStyle:{paddingBottom:150},
+sceneContainerStyle:{paddingBottom:0},
 edgeHitWidth:9999},
-React.createElement(LifeScreen,{tabLabel:'Life',navigator:this.props.navigator}),
-React.createElement(StyleScreen,{tabLabel:'Style',navigator:this.props.navigator})));}});
+
+React.createElement(LifeScreen,{tabLabel:'生活',navigator:this.props.navigator}),
+React.createElement(StyleScreen,{tabLabel:'方式',navigator:this.props.navigator})));}});
+
 
 
 
@@ -53921,14 +53681,15 @@ return createElement(elementOrClass,props);}}
 
 module.exports = createElementFrom;
 });
-__d('anlint/App/Views/Home/styleScreen.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Web/webview.js"],function(global, require, module, exports) {  'use strict';
+__d('anlint/App/Views/Home/lifeScreen.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Web/webview.js","react-native-refreshable-listview/index.js"],function(global, require, module, exports) {  'use strict';
 
 
 
 
 
 var React=require('react-native/Libraries/react-native/react-native.js');
-var ArticleView=require('anlint/App/Views/Web/webview.js');var 
+var ArticleView=require('anlint/App/Views/Web/webview.js');
+var RefreshableListView=require('react-native-refreshable-listview/index.js');var 
 
 
 StyleSheet=
@@ -53940,11 +53701,259 @@ StyleSheet=
 
 
 
-React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var ListView=React.ListView;var ActivityIndicatorIOS=React.ActivityIndicatorIOS;var PixelRatio=React.PixelRatio;var NavigatorIOS=React.NavigatorIOS;var TouchableHighlight=React.TouchableHighlight;
+
+React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var ListView=React.ListView;var ActivityIndicatorIOS=React.ActivityIndicatorIOS;var PixelRatio=React.PixelRatio;var NavigatorIOS=React.NavigatorIOS;var TouchableHighlight=React.TouchableHighlight;var Dimensions=React.Dimensions;
+
+var deviceWidth=Dimensions.get('window').width;
+
+
+var request_url='http://leosblackboard.sinaapp.com/anlintapi';
+var api_url='https://www.anlint.com/api/v1/serv/getall';
+
+
+var lifeScreen=React.createClass({displayName:'lifeScreen',
+getInitialState:function(){
+console.log(deviceWidth);
+return {
+
+dataSource:new ListView.DataSource({
+rowHasChanged:function(row1,row2){return row1 !== row2;}}),
+
+loaded:false};},
+
+
+
+
+componentDidMount:function(){var _this=this;
+
+fetch(api_url).
+then(function(response){return response.json();}).
+then(function(responseData){
+_this.setState({
+dataSource:_this.state.dataSource.cloneWithRows(responseData.Servs),
+loaded:true});}).
+
+
+done();},
+
+
+
+_reload:function(){var _this2=this;
+
+fetch(request_url).
+then(function(response){return response.json();}).
+then(function(responseData){
+_this2.setState({
+dataSource:_this2.state.dataSource.cloneWithRows(responseData),
+loaded:true});}).
+
+
+done();},
+
+
+
+_itemPressed:function(articleTitle,articleLink){
+var url=articleLink;
+
+
+this.props.navigator.push({
+title:articleTitle,
+component:ArticleView,
+passProps:{url:url}});},
+
+
+
+renderList:function(){
+return (
+React.createElement(ListView,{
+style:styles.topicListView,
+dataSource:this.state.dataSource,
+renderRow:this.renderItem}));},
+
+
+
+renderItem:function(rowData){var _this3=this;
+
+return (
+React.createElement(TouchableHighlight,{onPress:function(){return _this3._itemPressed(rowData.title,rowData.link);},
+underlayColor:'#dddddd'},
+React.createElement(View,null,
+React.createElement(View,{style:styles.topicCard},
+React.createElement(Image,{style:styles.thumbnail,source:{uri:rowData.pic}}),
+React.createElement(View,{style:styles.textContainer},
+React.createElement(Text,{style:styles.topicTitle,numberOfLines:2},rowData.title))),
+
+
+
+React.createElement(View,{style:styles.separator}))));},
+
+
+
+
+
+renderLoadingView:function(){
+return (
+React.createElement(View,{style:styles.loadingContainner},
+React.createElement(Text,{style:styles.loadingText},'正在加载...'),
+React.createElement(ActivityIndicatorIOS,null)));},
+
+
+
+
+render:function(){
+if(this.state.loaded){
+return (
+React.createElement(RefreshableListView,{
+dataSource:this.state.dataSource,
+renderRow:this.renderItem,
+loadData:this.renderLoadingView,
+style:styles.topicListView,
+refreshDescription:'正在刷新...',
+minDisplayTime:500,
+minPulldownDistance:80,
+minBetweenTime:2000}));}else 
+{
+return this.renderLoadingView();}}});
+
+
+
+
+
+
+
+var styles=StyleSheet.create({
+loadingContainner:{
+flex:1,
+flexDirection:'column',
+justifyContent:'center',
+alignItems:'center',
+backgroundColor:'#FFFFFF'},
+
+loadingText:{
+fontSize:14,
+marginBottom:20},
+
+rowContainner:{
+flexDirection:'column',
+padding:0,
+backgroundColor:'white'},
+
+textContinner:{
+flex:1},
+
+title:{
+fontWeight:'bold',
+fontSize:14,
+color:'#333444',
+padding:5,
+width:deviceWidth - 20},
+
+summary:{
+fontSize:13.5,
+
+color:'white',
+width:deviceWidth - 20,
+padding:5,
+backgroundColor:''},
+
+thumbnail:{
+
+
+width:deviceWidth - 28,
+height:150},
+
+separator:{
+height:0 / PixelRatio.get(),
+backgroundColor:'#dddddd'},
+
+
+topicListView:{
+flex:1,
+backgroundColor:'#ebeced',
+padding:8},
+
+
+topicCard:{
+flex:1,
+flexDirection:'column',
+padding:6,
+backgroundColor:'#ffffff',
+marginBottom:5,
+borderColor:'#f0f0f0',
+borderStyle:'solid',
+borderWidth:1,
+borderRadius:0},
+
+topicTitle:{
+fontSize:16,
+lineHeight:20,
+fontWeight:'bold',
+letterSpacing:1,
+
+color:'#333333'}});
+
+
+
+module.exports = lifeScreen;
+});
+__d('anlint/App/Views/Web/webview.js',["react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  'use strict';
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+StyleSheet=
+
+
+React.StyleSheet;var View=React.View;var WebView=React.WebView;
+
+var styles=StyleSheet.create({
+container:{
+flex:1,
+backgroundColor:'#F6F6EF',
+flexDirection:'column'}});
+
+
+
+var Web=React.createClass({displayName:'Web',
+render:function(){
+var url=this.props.url;
+
+return (
+React.createElement(View,{style:styles.container},
+React.createElement(WebView,{url:this.props.url})));}});
+
+
+
+
+
+module.exports = Web;
+});
+__d('anlint/App/Views/Home/styleScreen.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Web/webview.js","react-native-refreshable-listview/index.js"],function(global, require, module, exports) {  'use strict';
+
+
+
+
+
+var React=require('react-native/Libraries/react-native/react-native.js');
+var ArticleView=require('anlint/App/Views/Web/webview.js');
+var RefreshableListView=require('react-native-refreshable-listview/index.js');var 
+
+
+StyleSheet=
+
+
+
+
+
+
+
+
+
+React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var ListView=React.ListView;var ActivityIndicatorIOS=React.ActivityIndicatorIOS;var PixelRatio=React.PixelRatio;var NavigatorIOS=React.NavigatorIOS;var TouchableHighlight=React.TouchableHighlight;var Dimensions=React.Dimensions;
 
 
 
 var api_url='https://www.anlint.com/api/v1/lint/getall';
+var deviceWidth=Dimensions.get('window').width;
 
 var style=React.createClass({displayName:'style',
 getInitialState:function(){
@@ -53963,7 +53972,6 @@ componentDidMount:function(){var _this=this;
 fetch(api_url).
 then(function(response){return response.json();}).
 then(function(responseData){
-console.log(responseData.Lints);
 _this.setState({
 dataSource:_this.state.dataSource.cloneWithRows(responseData.Lints),
 loaded:true});}).
@@ -53989,20 +53997,12 @@ done();},
 
 _itemPressed:function(articleTitle,articleId){
 var url="https://www.anlint.com/lifestyle/lints/" + articleId;
-var articleTitle="文章";
-
-this.props.navigator.push({
-title:articleTitle,
-component:ArticleView,
-passProps:{url:url}});},
+var articleTitle="文章";},
 
 
 
-render:function(){
-if(this.state.loaded){
-return this.renderList();}else 
-{
-return this.renderLoadingView();}},
+
+
 
 
 
@@ -54020,11 +54020,11 @@ React.createElement(TouchableHighlight,{onPress:function(){return _this3._itemPr
 underlayColor:'#dddddd'},
 React.createElement(View,null,
 React.createElement(View,{style:styles.rowContainner},
-React.createElement(Image,{style:styles.thumbnail,source:{uri:rowData.pic}}),
 React.createElement(View,{style:styles.textContainer},
-React.createElement(Text,{style:styles.title,numberOfLines:2},rowData.id))),
+React.createElement(Text,{style:styles.title,numberOfLines:2},rowData.pubname),
+React.createElement(Text,{style:styles.summary,numberOfLines:4},rowData.text)),
 
-
+React.createElement(Image,{style:styles.thumbnail,source:{uri:rowData.pic}})),
 
 React.createElement(View,{style:styles.separator}))));},
 
@@ -54035,9 +54035,27 @@ React.createElement(View,{style:styles.separator}))));},
 renderLoadingView:function(){
 return (
 React.createElement(View,{style:styles.loadingContainner},
-React.createElement(Text,{style:styles.loadingText},'Loading...'),
-React.createElement(ActivityIndicatorIOS,null)));}});
+React.createElement(Text,{style:styles.loadingText},'正在加载...'),
+React.createElement(ActivityIndicatorIOS,null)));},
 
+
+
+
+
+render:function(){
+if(this.state.loaded){
+return (
+React.createElement(RefreshableListView,{
+dataSource:this.state.dataSource,
+renderRow:this.renderItem,
+loadData:this.renderLoadingView,
+style:styles.topicListView,
+refreshDescription:'正在刷新...',
+minDisplayTime:500,
+minPulldownDistance:80,
+minBetweenTime:2000}));}else 
+{
+return this.renderLoadingView();}}});
 
 
 
@@ -54058,34 +54076,35 @@ fontSize:14,
 marginBottom:20},
 
 rowContainner:{
-flexDirection:'column',
-padding:0,
-backgroundColor:'white',
-marginTop:0},
+flexDirection:'row',
+padding:10},
 
 textContinner:{
-flex:1},
+flex:3,
+width:deviceWidth * 0.65},
 
 title:{
 fontWeight:'bold',
-fontSize:14,
-color:'#333444',
-padding:5,
-width:190 * PixelRatio.get()},
+fontSize:18,
+color:'#000000',
+
+width:deviceWidth * 0.65},
 
 summary:{
 fontSize:13.5,
 color:'#656565',
-width:185 * PixelRatio.get(),
-padding:5},
+
+width:deviceWidth * 0.65,
+marginTop:5},
 
 thumbnail:{
-width:190 * PixelRatio.get(),
-height:80 * PixelRatio.get()},
 
+height:deviceWidth * 0.3,
+width:deviceWidth * 0.3,
+marginRight:10},
 
 separator:{
-height:1 / PixelRatio.get(),
+height:10 / PixelRatio.get(),
 backgroundColor:'#dddddd'}});
 
 
