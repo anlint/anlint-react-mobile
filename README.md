@@ -44,6 +44,8 @@ dev(默认的 true)——设置了 __DEV__ 变量的值。当是 true 时，它�
 
 minify(默认的 false)——只要不通过 UglifyJS 传输 JS 代码。
 
+Example: `react-native bundle --minify --dev=false`
+
 
 
 ####Xcode7上运行报错解决方法
@@ -86,13 +88,13 @@ minify(默认的 false)——只要不通过 UglifyJS 传输 JS 代码。
 - 实现加载缓存判断
 - 代码重构，进一步模块化
 - ~~适配更多尺寸的屏幕~~
-- ＊添加上拉加载更多＊
+- **添加上拉加载更多**
 
 ## bug list
 - 滚到底部有一部分内容显示不了
-－ ListView的卡片式布局，右边的padding没有显示出来
-－ ScrollTabView里嵌套的页面点击StatusBar没有办法滚动到顶部，WebView页面则没有问题
-－ 下拉刷新还有一些bug
+- ListView的卡片式布局，右边的padding没有显示出来
+- ScrollTabView里嵌套的页面点击StatusBar没有办法滚动到顶部，WebView页面则没有问题
+- 下拉刷新还有一些bug
 
 
 

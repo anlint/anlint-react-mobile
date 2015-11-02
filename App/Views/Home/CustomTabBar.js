@@ -10,27 +10,6 @@ var deviceWidth = require('Dimensions').get('window').width;
 var precomputeStyle = require('precomputeStyle');
 var TAB_UNDERLINE_REF = 'TAB_UNDERLINE';
 
-var styles = StyleSheet.create({
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 8,
-  },
-
-  tabs: {
-    height: 50,
-    flexDirection: 'row',
-    marginTop: 0,
-    backgroundColor: '#fefefe',
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderTopWidth: 0,
-    borderBottomWidth: 1,
-    borderColor: '#f0f0f0'
-  },
-});
-
 var CustomTabBar = React.createClass({
   propTypes: {
     goToPage: React.PropTypes.func,
@@ -70,6 +49,28 @@ var CustomTabBar = React.createClass({
         <View style={tabUnderlineStyle} ref={TAB_UNDERLINE_REF} />
       </View>
     );
+  },
+});
+
+
+var styles = StyleSheet.create({
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 0,
+  },
+
+  tabs: {
+    height: 40,
+    flexDirection: 'row',
+    marginTop: 0,
+    backgroundColor: '#fefefe',
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderTopWidth: 0,
+    borderBottomWidth: 1,
+    borderColor: '#f0f0f0'
   },
 });
 

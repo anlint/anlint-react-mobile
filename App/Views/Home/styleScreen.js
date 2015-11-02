@@ -81,16 +81,16 @@ var style = React.createClass({
     return(
         <ListView
           dataSource = {this.state.dataSource}
-          renderRow = {this.renderItem} />
+          renderRow = {this.renderRow} />
       );
   },
 
-  renderItem: function(rowData) {
+  renderRow: function(rowData) {
     return (
       <TouchableHighlight onPress={() => this._itemPressed(rowData.id, rowData.id)}
           underlayColor='#dddddd'>
         <View>
-          <View style={styles.rowContainner}>
+          <View style={styles.card}>
             <View  style={styles.textContainer}>
               <Text style={styles.title} numberOfLines={2}>{rowData.pubname}</Text>
               <Text style={styles.summary} numberOfLines={4}>{rowData.text}</Text>
@@ -118,7 +118,7 @@ var style = React.createClass({
       return(
         <RefreshableListView
           dataSource={this.state.dataSource}
-          renderRow={this.renderItem}
+          renderRow={this.renderRow}
           loadData={this.renderLoadingView}
           style={styles.topicListView}
           refreshDescription="正在刷新..."
@@ -146,10 +146,6 @@ var styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 20
   },
-  rowContainner: {
-    flexDirection: 'row',
-    padding: 10,
-  },
   textContinner: {
     flex: 3,
     width: deviceWidth * 0.65,
@@ -159,24 +155,35 @@ var styles = StyleSheet.create({
     fontSize: 18,
     color: '#000000',
     //width: 125 * PixelRatio.get(),
-    width: deviceWidth * 0.65,
+    width: deviceWidth * 0.59,
   },
   summary: {
     fontSize: 13.5,
     color: '#656565',
     //width: 120 * PixelRatio.get(),
-    width: deviceWidth * 0.65,
+    width: deviceWidth * 0.59,
     marginTop: 5
   },
   thumbnail: {
     // width: 49 * PixelRatio.get(),
     height: deviceWidth * 0.3,
     width: deviceWidth * 0.3,
-    marginRight: 10
   },
   separator: {
-    height: 10 / PixelRatio.get(),
+    height: 0 / PixelRatio.get(),
     backgroundColor: '#dddddd'
+  },
+  card: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderColor: 'rgba(0,0,0,0.1)',
+    margin: 5,
+    padding: 10,
+    shadowColor: '#ccc',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
   },
 });
 

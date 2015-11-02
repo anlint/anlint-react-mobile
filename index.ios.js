@@ -5,9 +5,6 @@
 'use strict';
 
 var React = require('react-native');
-var LifeStyle = require('./App/Views/Home/lifeStyle')
-
-
 
 var {
   AppRegistry,
@@ -23,6 +20,9 @@ var {
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 var RefreshableListView = require('react-native-refreshable-listview');
 var deviceWidth = Dimensions.get('window').width;
+
+var LifeStyle = require('./App/Views/Home/lifeStyle')
+var LifeScreen = require('./App/Views/Home/lifeScreen')
 
 
 var anlint = React.createClass({
@@ -49,13 +49,14 @@ var anlint = React.createClass({
         ref='INDEX_NAV'
         initialRoute={{
           title: '安邻',
-          component: require('./App/Views/Home/lifeStyle')
+          component: LifeStyle
         }}
         shadowHidden={true}
         translucent={false}
         barTintColor='#e74c3c'
         titleTextColor='#ffffff'
-        tintColor='#ffffff'/>
+        tintColor='#ffffff'
+        itemWrapperStyle={styles.navigator}/>
     );
   }
 });
