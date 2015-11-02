@@ -5,8 +5,6 @@
 'use strict';
 
 var React = require('react-native');
-var ArticleView = require('../Web/webview');
-var RefreshableListView = require('react-native-refreshable-listview');
 
 var {
   StyleSheet,
@@ -22,6 +20,8 @@ var {
 } = React;
 
 var deviceWidth = Dimensions.get('window').width;
+var ArticleView = require('../Web/webview');
+var RefreshableListView = require('react-native-refreshable-listview');
 
 // var AppRegistry = React.AppRegistry;
 var request_url = 'http://leosblackboard.sinaapp.com/anlintapi';
@@ -69,7 +69,7 @@ var lifeScreen = React.createClass({
   },
 
 
-  _itemPressed(articleTitle, articleLink) {
+  _onPress(articleTitle, articleLink) {
     var url = articleLink;
     // var articleTitle = "文章";
 
@@ -82,20 +82,27 @@ var lifeScreen = React.createClass({
 
   renderList: function() {
     return(
+      <UIExplorerPage
+        title={this.props.navigator ? null : '<ListView> - Simple'}
+        noSpacer={true}
+        noScroll={true}>
         <ListView
           style = {styles.topicListView}
           dataSource = {this.state.dataSource}
-          renderRow = {this.renderItem} />
-      );
+          renderRow = {this.renderRow} 
+          canLoadMore={this.state.canLoadMoreContent}
+          isLoadingMore={this.state.isLoadingContent} />
+      </UIExplorerPage>
+    );
   },
 
-  renderItem: function(rowData) {
+  renderRow: function(rowData) {
     //var movie = {title:'美食 | 别辜负冰淇淋的一片盛情', date:'2015-09-18', posters: {thumbnail: 'https://dn-anlint0.qbox.me/FseCOstTejRXgca9NYcwW2KE4ueA'}}
     return (
-      <TouchableHighlight onPress={() => this._itemPressed(rowData.title, rowData.link)}
+      <TouchableHighlight onPress={() => this._onPress(rowData.title, rowData.link)}
           underlayColor='#dddddd'>
         <View>
-          <View style={styles.topicCard}>
+          <View style={styles.card}>
             <Image style={styles.thumbnail} source={{ uri: rowData.pic }} />
             <View  style={styles.textContainer}>
               <Text style={styles.topicTitle} numberOfLines={2}>{rowData.title}</Text>
@@ -122,7 +129,7 @@ var lifeScreen = React.createClass({
       return(
         <RefreshableListView
           dataSource={this.state.dataSource}
-          renderRow={this.renderItem}
+          renderRow={this.renderRow}
           loadData={this.renderLoadingView}
           style={styles.topicListView}
           refreshDescription="正在刷新..."
@@ -152,7 +159,7 @@ var styles = StyleSheet.create({
   },
   rowContainner: {
     flexDirection: 'column',
-    padding: 0,
+    padding: 6,
     backgroundColor: 'white',
   },
   textContinner: {
@@ -163,20 +170,20 @@ var styles = StyleSheet.create({
     fontSize: 14,
     color: '#333444',
     padding: 5,
-    width: deviceWidth - 20
+    width: deviceWidth - 40
   },
   summary: {
     fontSize: 13.5,
     //color: '#656565',
     color: 'white',
-    width: deviceWidth - 20,
+    width: deviceWidth - 40,
     padding: 5,
     backgroundColor: ''
   },
   thumbnail: {
     //width: 170 * PixelRatio.get(),
     //height: 100 * PixelRatio.get(),
-    width: deviceWidth - 28,
+    width: deviceWidth - 40,
     height: 150,
   },
   separator: {
@@ -188,7 +195,7 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ebeced',   //#f0f0f0
     padding: 8,
-    // overflow: 'hidden',
+    overflow: 'hidden',
   },
   topicCard: {
     flex: 1,
@@ -208,7 +215,19 @@ var styles = StyleSheet.create({
     letterSpacing: 1,
     // width: deviceWidth - 20,
     color: '#333333'
-  }
+  },
+  card: {
+    flexDirection: 'column',
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderColor: 'rgba(0,0,0,0.1)',
+    margin: 5,
+    padding: 10,
+    shadowColor: '#ccc',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
 });
 
 module.exports = lifeScreen;

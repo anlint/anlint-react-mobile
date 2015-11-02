@@ -39,12 +39,13 @@ var lifeStyle = React.createClass({
     return(
       <ScrollableTabView 
         renderTabBar = {() => <CustomTabBar someProp={'here'} />}
-        sceneContainerStyle = {{ paddingBottom: 0 }}
-        edgeHitWidth = {9999} >
+        sceneContainerStyle = {styles.scence}
+        edgeHitWidth = {99} 
+        scrollsToTop={false}>
 
-        <LifeScreen  tabLabel="生活" navigator={this.props.navigator}/>
+        <LifeScreen tabLabel="生活" navigator={this.props.navigator}/>
         <StyleScreen tabLabel="方式" navigator={this.props.navigator}/>
-
+          
       </ScrollableTabView>
       );
   },
@@ -52,6 +53,21 @@ var lifeStyle = React.createClass({
 });
 
 
+// <ScrollView
+//   contentContainerStyle={styles.contentContainer}
+//   style={styles.scrollView}
+//   tabLabel="生活"
+//   scrollsToTop='false'>
+//   <LifeScreen navigator={this.props.navigator}/>
+// </ScrollView>
+
+// <ScrollView
+//   contentContainerStyle={styles.contentContainer}
+//   style={styles.scrollView}
+//   tabLabel="方式"
+//   scrollsToTop='true'>
+//   <StyleScreen navigator={this.props.navigator}/>
+// </ScrollView>
 
 var styles = React.StyleSheet.create({
   container: {
@@ -59,6 +75,11 @@ var styles = React.StyleSheet.create({
   },
   navigator: {
     backgroundColor: '#d52b2a'
+  },
+  scence: {
+    padding: 10,
+    paddingTop: 74,
+    flex: 1
   },
   text: {
     color: 'black',
