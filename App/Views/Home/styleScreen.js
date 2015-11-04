@@ -143,9 +143,19 @@ var style = React.createClass({
 
   renderList: function() {
     return(
-        <ListView
-          dataSource = {this.state.dataSource}
-          renderRow = {this.renderRow} />
+      <View style={{flex:1, flexDirection: 'column', justifyContent: 'center'}}>
+        <RefreshInfiniteListView
+          ref = {(list) => {this.list= list}}
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow}
+          initialListSize={30}
+          scrollEventThrottle={10}
+          style={{backgroundColor:'transparent'/*,top:100, left:10, width:200, height:300, position:'absolute'*/}}
+          onRefresh = {this.onRefresh}
+          onInfinite = {this.onInfinite} >
+        </RefreshInfiniteListView>
+        <View style={{height : 80}} />
+        </View>
       );
   },
 
@@ -178,22 +188,11 @@ var style = React.createClass({
 
 
   render: function() {
-    // if (this.state.loaded) {
-      return(
-        <RefreshInfiniteListView
-          ref = {(list) => {this.list= list}}
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow}
-          initialListSize={30}
-          scrollEventThrottle={10}
-          style={{backgroundColor:'transparent'/*,top:100, left:10, width:200, height:300, position:'absolute'*/}}
-          onRefresh = {this.onRefresh}
-          onInfinite = {this.onInfinite} >
-        </RefreshInfiniteListView>
-      );
-    // } else {
-    //   return this.renderLoadingView();
-    // }
+    if (this.state.loaded) {
+      return this.renderList();
+    } else {
+      return this.renderLoadingView();
+    }
   }
 
 });

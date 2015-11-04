@@ -43,10 +43,11 @@ var lifeStyle = React.createClass({
         renderTabBar = {() => <CustomTabBar someProp={'here'} />}
         sceneContainerStyle = {styles.scence}
         edgeHitWidth = {99} 
-        scrollsToTop={false}>
+        scrollsToTop={true}>
 
         <LifeScreen tabLabel="生活" navigator={this.props.navigator}/>
         <StyleScreen tabLabel="方式" navigator={this.props.navigator}/>
+
       </ScrollableTabView>
       );
   },

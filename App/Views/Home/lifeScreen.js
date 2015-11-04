@@ -126,7 +126,8 @@ var lifeScreen = React.createClass({
 
   renderList: function() {
     return(
-      <RefreshInfiniteListView
+      <View style={{flex:1, flexDirection: 'column', justifyContent: 'center'}}>
+        <RefreshInfiniteListView
           ref = {(list) => {this.list= list}}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow}
@@ -136,6 +137,8 @@ var lifeScreen = React.createClass({
           onRefresh = {this.onRefresh}
           onInfinite = {this.onInfinite} >
         </RefreshInfiniteListView>
+        <View style={{height : 60}} />
+      </View>
     );
   },
 
@@ -168,18 +171,7 @@ var lifeScreen = React.createClass({
 
   render: function() {
     if (this.state.loaded) {
-      return(
-        <RefreshInfiniteListView
-          ref = {(list) => {this.list= list}}
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow}
-          initialListSize={30}
-          scrollEventThrottle={10}
-          style={{backgroundColor:'transparent'/*,top:100, left:10, width:200, height:300, position:'absolute'*/}}
-          onRefresh = {this.onRefresh}
-          onInfinite = {this.onInfinite} >
-        </RefreshInfiniteListView>
-      );
+      return this.renderList();
     } else {
       return this.renderLoadingView();
     }
@@ -190,6 +182,11 @@ var lifeScreen = React.createClass({
 
 
 var styles = StyleSheet.create({
+  Containner: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
   loadingContainner: {
     flex: 1,
     flexDirection: 'column',
@@ -214,20 +211,20 @@ var styles = StyleSheet.create({
     fontSize: 14,
     color: '#333444',
     padding: 5,
-    width: deviceWidth - 40
+    width: deviceWidth - 32
   },
   summary: {
     fontSize: 13.5,
     //color: '#656565',
     color: 'white',
-    width: deviceWidth - 40,
+    width: deviceWidth - 32,
     padding: 5,
     backgroundColor: ''
   },
   thumbnail: {
     //width: 170 * PixelRatio.get(),
     //height: 100 * PixelRatio.get(),
-    width: deviceWidth - 40,
+    width: deviceWidth - 32,
     height: 150,
   },
   separator: {
@@ -257,7 +254,7 @@ var styles = StyleSheet.create({
     lineHeight: 20,
     fontWeight: 'bold',
     letterSpacing: 1,
-    // width: deviceWidth - 20,
+    width: deviceWidth - 32,
     color: '#333333'
   },
   card: {

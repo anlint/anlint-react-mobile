@@ -70,7 +70,7 @@ var anlint = React.createClass({
 
 var styles = React.StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   navigator: {
     backgroundColor: '#E7EAEC'
