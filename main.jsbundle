@@ -1409,7 +1409,8 @@ AppRegistry=
 
 
 
-React.AppRegistry;var NavigatorIOS=React.NavigatorIOS;var StyleSheet=React.StyleSheet;var TabBarIOS=React.TabBarIOS;var View=React.View;var Text=React.Text;var ScrollView=React.ScrollView;var Dimensions=React.Dimensions;
+
+React.AppRegistry;var NavigatorIOS=React.NavigatorIOS;var StyleSheet=React.StyleSheet;var TabBarIOS=React.TabBarIOS;var StatusBarIOS=React.StatusBarIOS;var View=React.View;var Text=React.Text;var ScrollView=React.ScrollView;var Dimensions=React.Dimensions;
 
 var ScrollableTabView=require('react-native-scrollable-tab-view/index.js');
 var RefreshableListView=require('react-native-refreshable-listview/index.js');
@@ -1421,10 +1422,15 @@ var LifeScreen=require('anlint/App/Views/Home/lifeScreen.js');
 
 var anlint=React.createClass({displayName:'anlint',
 getInitialState:function(){
+StatusBarIOS.setStyle(1);
 return {
 selectedTab:'lifeTab',
 notifCount:0,
 presses:0};},
+
+
+
+componentDidMount:function(){},
 
 
 
@@ -53592,7 +53598,7 @@ return createElement(elementOrClass,props);}}
 
 module.exports = createElementFrom;
 });
-__d('anlint/App/Views/Home/lifeStyle.js',["react-native/Libraries/react-native/react-native.js","react-native-scrollable-tab-view/index.js","react-native-refreshable-listview/index.js","anlint/App/Views/Home/styleScreen.js","anlint/App/Views/Home/CustomTabBar.js","anlint/App/Views/Home/lifeScreen.js"],function(global, require, module, exports) {  'use strict';
+__d('anlint/App/Views/Home/lifeStyle.js',["react-native/Libraries/react-native/react-native.js","react-native-scrollable-tab-view/index.js","react-native-refreshable-listview/index.js","anlint/App/Views/Home/lifeScreen.js","anlint/App/Views/Home/styleScreen.js","anlint/App/Views/Home/CustomTabBar.js","anlint/App/Views/Components/RefreshInfiniteListView.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -53619,6 +53625,8 @@ var LifeScreen=require('anlint/App/Views/Home/lifeScreen.js');
 var StyleScreen=require('anlint/App/Views/Home/styleScreen.js');
 var CustomTabBar=require('anlint/App/Views/Home/CustomTabBar.js');
 
+var RefreshInfiniteListView=require('anlint/App/Views/Components/RefreshInfiniteListView.js');
+
 
 var lifeStyle=React.createClass({displayName:'lifeStyle',
 getInitialState:function(){
@@ -53639,7 +53647,6 @@ scrollsToTop:false},
 
 React.createElement(LifeScreen,{tabLabel:'生活',navigator:this.props.navigator}),
 React.createElement(StyleScreen,{tabLabel:'方式',navigator:this.props.navigator})));}});
-
 
 
 
@@ -53703,7 +53710,7 @@ shadowRadius:3}});
 
 module.exports = lifeStyle;
 });
-__d('anlint/App/Views/Home/lifeScreen.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Web/webview.js","react-native-refreshable-listview/index.js"],function(global, require, module, exports) {  'use strict';
+__d('anlint/App/Views/Home/lifeScreen.js',["react-native/Libraries/react-native/react-native.js","react-native-refreshable-listview/index.js","react-timer-mixin/TimerMixin.js","anlint/App/Views/Components/webview.js","anlint/App/Views/Components/RefreshInfiniteListView.js"],function(global, require, module, exports) {  'use strict';
 
 
 
@@ -53724,54 +53731,98 @@ StyleSheet=
 
 React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var ListView=React.ListView;var ActivityIndicatorIOS=React.ActivityIndicatorIOS;var PixelRatio=React.PixelRatio;var NavigatorIOS=React.NavigatorIOS;var TouchableHighlight=React.TouchableHighlight;var Dimensions=React.Dimensions;
 
-var deviceWidth=Dimensions.get('window').width;
-var ArticleView=require('anlint/App/Views/Web/webview.js');
 var RefreshableListView=require('react-native-refreshable-listview/index.js');
 
+var TimerMixin=require('react-timer-mixin/TimerMixin.js');
 
-var request_url='http://leosblackboard.sinaapp.com/anlintapi';
+var deviceWidth=Dimensions.get('window').width;
+
+var ArticleView=require('anlint/App/Views/Components/webview.js');
+var RefreshInfiniteListView=require('anlint/App/Views/Components/RefreshInfiniteListView.js');
+
 var api_url='https://www.anlint.com/api/v1/serv/getall';
+var base_api_url='https://www.anlint.com/api/v1/serv/getall?lastdate=';
 
+
+var ds=new ListView.DataSource({rowHasChanged:function(r1,r2){return r1 !== r2;}});
+var CACHE=[];
 
 var lifeScreen=React.createClass({displayName:'lifeScreen',
-getInitialState:function(){
-console.log(deviceWidth);
-return {
+mixins:[TimerMixin],
+data:{index:0,list:[]},
+lastdate:String,
 
-dataSource:new ListView.DataSource({
-rowHasChanged:function(row1,row2){return row1 !== row2;}}),
+getData:function(init){var _this=this;
+var total=10;
+if(init){
+this.data.index = 0;
 
-loaded:false};},
-
-
-
-
-componentDidMount:function(){var _this=this;
 
 fetch(api_url).
 then(function(response){return response.json();}).
 then(function(responseData){
+_this.cache(responseData.Servs);
 _this.setState({
-dataSource:_this.state.dataSource.cloneWithRows(responseData.Servs),
 loaded:true});}).
 
 
-done();},
+catch(function(error){
+console.log("数据加载出错");}).
 
+done();}else 
 
-
-_reload:function(){var _this2=this;
-
-fetch(request_url).
+{
+console.log(base_api_url + this.lastdate);
+fetch(base_api_url + this.lastdate).
 then(function(response){return response.json();}).
 then(function(responseData){
-_this2.setState({
-dataSource:_this2.state.dataSource.cloneWithRows(responseData),
+_this.cache(responseData.Servs);
+_this.setState({
 loaded:true});}).
 
 
-done();},
+catch(function(error){
+console.log("数据加载出错");}).
 
+done();}},
+
+
+
+
+cache:function(items){
+for(var i in items) {
+CACHE.push(items[i]);}
+
+
+
+this.lastdate = new Date(items[items.length - 1].create_at).toISOString();
+
+
+this.setState({
+dataSource:this.state.dataSource.cloneWithRows(CACHE)});},
+
+
+
+getInitialState:function(){
+this.getData(true);
+return {
+isLoadedAllData:false,
+dataSource:ds.cloneWithRows(CACHE)};},
+
+
+onRefresh:function(){var _this2=this;
+this.getData(true);
+this.setTimeout(function(){
+_this2.list.hideHeader();
+_this2.setState({dataSource:ds.cloneWithRows(CACHE)});},
+1000);},
+
+onInfinite:function(){var _this3=this;
+this.getData();
+this.setTimeout(function(){
+_this3.list.hideFooter();
+_this3.setState({dataSource:ds.cloneWithRows(CACHE)});},
+1000);},
 
 
 _onPress:function(articleTitle,articleLink){
@@ -53785,33 +53836,31 @@ passProps:{url:url}});},
 
 
 
-renderList:function(){
+renderList:function(){var _this4=this;
 return (
-React.createElement(UIExplorerPage,{
-title:this.props.navigator?null:'<ListView> - Simple',
-noSpacer:true,
-noScroll:true},
-React.createElement(ListView,{
-style:styles.topicListView,
+React.createElement(RefreshInfiniteListView,{
+ref:function(list){_this4.list = list;},
 dataSource:this.state.dataSource,
 renderRow:this.renderRow,
-canLoadMore:this.state.canLoadMoreContent,
-isLoadingMore:this.state.isLoadingContent})));},
+initialListSize:30,
+scrollEventThrottle:10,
+style:{backgroundColor:'transparent'},
+onRefresh:this.onRefresh,
+onInfinite:this.onInfinite}));},
 
 
 
 
-renderRow:function(rowData){var _this3=this;
+renderRow:function(rowData){var _this5=this;
 
 return (
-React.createElement(TouchableHighlight,{onPress:function(){return _this3._onPress(rowData.title,rowData.link);},
+React.createElement(TouchableHighlight,{onPress:function(){return _this5._onPress(rowData.title,rowData.link);},
 underlayColor:'#dddddd'},
 React.createElement(View,null,
 React.createElement(View,{style:styles.card},
 React.createElement(Image,{style:styles.thumbnail,source:{uri:rowData.pic}}),
 React.createElement(View,{style:styles.textContainer},
 React.createElement(Text,{style:styles.topicTitle,numberOfLines:2},rowData.title))),
-
 
 
 React.createElement(View,{style:styles.separator}))));},
@@ -53829,18 +53878,20 @@ React.createElement(ActivityIndicatorIOS,null)));},
 
 
 
-render:function(){
+render:function(){var _this6=this;
 if(this.state.loaded){
 return (
-React.createElement(RefreshableListView,{
+React.createElement(RefreshInfiniteListView,{
+ref:function(list){_this6.list = list;},
 dataSource:this.state.dataSource,
 renderRow:this.renderRow,
-loadData:this.renderLoadingView,
-style:styles.topicListView,
-refreshDescription:'正在刷新...',
-minDisplayTime:500,
-minPulldownDistance:80,
-minBetweenTime:2000}));}else 
+initialListSize:30,
+scrollEventThrottle:10,
+style:{backgroundColor:'transparent'},
+onRefresh:this.onRefresh,
+onInfinite:this.onInfinite}));}else 
+
+
 {
 return this.renderLoadingView();}}});
 
@@ -53875,20 +53926,20 @@ fontWeight:'bold',
 fontSize:14,
 color:'#333444',
 padding:5,
-width:deviceWidth - 20},
+width:deviceWidth - 40},
 
 summary:{
 fontSize:13.5,
 
 color:'white',
-width:deviceWidth - 20,
+width:deviceWidth - 40,
 padding:5,
 backgroundColor:''},
 
 thumbnail:{
 
 
-width:deviceWidth - 46,
+width:deviceWidth - 40,
 height:150},
 
 separator:{
@@ -53937,7 +53988,99 @@ shadowRadius:3}});
 
 module.exports = lifeScreen;
 });
-__d('anlint/App/Views/Web/webview.js',["react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  'use strict';
+__d('react-timer-mixin/TimerMixin.js',[],function(global, require, module, exports) {  'use strict';
+
+
+
+
+
+
+
+
+
+
+var GLOBAL=typeof window === 'undefined'?global:window;
+
+var setter=function(_setter,_clearer,array){
+return function(callback,delta){
+var id=_setter((function(){
+_clearer.call(this,id);
+callback.apply(this,arguments);}).
+bind(this),delta);
+
+if(!this[array]){
+this[array] = [id];}else 
+{
+this[array].push(id);}
+
+return id;};};
+
+
+
+var clearer=function(_clearer,array){
+return function(id){
+if(this[array]){
+var index=this[array].indexOf(id);
+if(index !== -1){
+this[array].splice(index,1);}}
+
+
+_clearer(id);};};
+
+
+
+var _timeouts='TimerMixin_timeouts';
+var _clearTimeout=clearer(GLOBAL.clearTimeout,_timeouts);
+var _setTimeout=setter(GLOBAL.setTimeout,_clearTimeout,_timeouts);
+
+var _intervals='TimerMixin_intervals';
+var _clearInterval=clearer(GLOBAL.clearInterval,_intervals);
+var _setInterval=setter(GLOBAL.setInterval,function(){},_intervals);
+
+var _immediates='TimerMixin_immediates';
+var _clearImmediate=clearer(GLOBAL.clearImmediate,_immediates);
+var _setImmediate=setter(GLOBAL.setImmediate,_clearImmediate,_immediates);
+
+var _rafs='TimerMixin_rafs';
+var _cancelAnimationFrame=clearer(GLOBAL.cancelAnimationFrame,_rafs);
+var _requestAnimationFrame=setter(GLOBAL.requestAnimationFrame,_cancelAnimationFrame,_rafs);
+
+var TimerMixin={
+componentWillUnmount:function(){
+this[_timeouts] && this[_timeouts].forEach(function(id){
+GLOBAL.clearTimeout(id);});
+
+this[_timeouts] = null;
+this[_intervals] && this[_intervals].forEach(function(id){
+GLOBAL.clearInterval(id);});
+
+this[_intervals] = null;
+this[_immediates] && this[_immediates].forEach(function(id){
+GLOBAL.clearImmediate(id);});
+
+this[_immediates] = null;
+this[_rafs] && this[_rafs].forEach(function(id){
+GLOBAL.cancelAnimationFrame(id);});
+
+this[_rafs] = null;},
+
+
+setTimeout:_setTimeout,
+clearTimeout:_clearTimeout,
+
+setInterval:_setInterval,
+clearInterval:_clearInterval,
+
+setImmediate:_setImmediate,
+clearImmediate:_clearImmediate,
+
+requestAnimationFrame:_requestAnimationFrame,
+cancelAnimationFrame:_cancelAnimationFrame};
+
+
+module.exports = TimerMixin;
+});
+__d('anlint/App/Views/Components/webview.js',["react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -53968,15 +54111,283 @@ React.createElement(WebView,{url:this.props.url})));}});
 
 module.exports = Web;
 });
-__d('anlint/App/Views/Home/styleScreen.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Web/webview.js","react-native-refreshable-listview/index.js"],function(global, require, module, exports) {  'use strict';
+__d('anlint/App/Views/Components/RefreshInfiniteListView.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Components/pull_arrow.png","anlint/App/Views/Components/pull_arrow.png","anlint/App/Views/Components/pull_arrow.png","anlint/App/Views/Components/pull_arrow.png"],function(global, require, module, exports) {  'use strict';var _extends=Object.assign || function(target){for(var i=1;i < arguments.length;i++) {var source=arguments[i];for(var key in source) {if(Object.prototype.hasOwnProperty.call(source,key)){target[key] = source[key];}}}return target;};
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+Image=
 
 
 
 
 
-var React=require('react-native/Libraries/react-native/react-native.js');
-var ArticleView=require('anlint/App/Views/Web/webview.js');
-var RefreshableListView=require('react-native-refreshable-listview/index.js');var 
+
+React.Image;var View=React.View;var Text=React.Text;var StyleSheet=React.StyleSheet;var ListView=React.ListView;var Dimensions=React.Dimensions;var ActivityIndicatorIOS=React.ActivityIndicatorIOS;
+
+
+
+
+
+
+
+
+
+
+
+
+var 
+STATUS_NONE=0,
+STATUS_REFRESH_IDLE=1,
+STATUS_WILL_REFRESH=2,
+STATUS_REFRESHING=3,
+STATUS_INFINITE_IDLE=4,
+STATUS_WILL_INFINITE=5,
+STATUS_INFINITING=6;
+
+var DEFAULT_PULL_DISTANCE=60;
+var DEFAULT_HF_HEIGHT=50;
+
+var RefreshInfiniteListView=React.createClass({displayName:'RefreshInfiniteListView',
+getDefaultProps:function(){
+return {
+footerHeight:DEFAULT_HF_HEIGHT,
+pullDistance:DEFAULT_PULL_DISTANCE,
+renderEmptyRow:function(){
+return (
+React.createElement(View,{style:{height:Dimensions.get('window').height,justifyContent:'center',alignItems:'center'}},
+React.createElement(Text,{style:{fontSize:20,fontWeight:'300',color:'#333444'}},'没有数据')));},
+
+
+
+
+
+renderHeaderRefreshIdle:function(){return (
+React.createElement(View,{style:{flex:1,height:DEFAULT_HF_HEIGHT,justifyContent:'center',alignItems:'center'}},
+React.createElement(Text,{style:styles.text},'下拉刷新...'),
+
+
+React.createElement(Image,{
+source:require('anlint/App/Views/Components/pull_arrow.png'),
+resizeMode:Image.resizeMode.stretch,
+style:styles.image})));},
+
+
+
+renderHeaderWillRefresh:function(){return (
+React.createElement(View,{style:{height:DEFAULT_HF_HEIGHT,justifyContent:'center',alignItems:'center'}},
+React.createElement(Text,{style:styles.text},'松开刷新...'),
+
+
+React.createElement(Image,{
+source:require('anlint/App/Views/Components/pull_arrow.png'),
+resizeMode:Image.resizeMode.stretch,
+style:[styles.image,styles.imageRotate]})));},
+
+
+
+renderHeaderRefreshing:function(){return (
+React.createElement(View,{style:{height:DEFAULT_HF_HEIGHT,justifyContent:'center',alignItems:'center'}},
+React.createElement(Text,{style:styles.text},'刷新...'),
+
+
+
+React.createElement(ActivityIndicatorIOS,{
+size:'small',
+animating:true})));},
+
+
+renderFooterInifiteIdle:function(){return (
+React.createElement(View,{style:{height:DEFAULT_HF_HEIGHT,justifyContent:'center',alignItems:'center'}},
+React.createElement(Image,{
+source:require('anlint/App/Views/Components/pull_arrow.png'),
+resizeMode:Image.resizeMode.stretch,
+style:[styles.image,styles.imageRotate]}),
+React.createElement(Text,{style:styles.text},'上拉更多...')));},
+
+
+
+
+renderFooterWillInifite:function(){return (
+React.createElement(View,{style:{height:DEFAULT_HF_HEIGHT,justifyContent:'center',alignItems:'center'}},
+React.createElement(Image,{
+source:require('anlint/App/Views/Components/pull_arrow.png'),
+resizeMode:Image.resizeMode.stretch,
+style:styles.image}),
+React.createElement(Text,{style:styles.text},'松开加载更多...')));},
+
+
+
+
+renderFooterInifiting:function(){return (
+React.createElement(View,{style:{height:DEFAULT_HF_HEIGHT,justifyContent:'center',alignItems:'center'}},
+React.createElement(ActivityIndicatorIOS,{
+size:'small',
+animating:true}),
+React.createElement(Text,{style:styles.text},'加载...')));},
+
+
+
+
+onRefresh:function(){
+console.log("onRefresh");},
+
+onInfinite:function(){
+console.log("onInfinite");}};},
+
+
+
+getInitialState:function(){
+return {
+status:STATUS_NONE,
+isLoadedAllData:false};},
+
+
+renderRow:function(text){
+if(this.dataSource){
+return this.props.renderEmptyRow(text);}else 
+{
+return this.props.renderRow(text);}},
+
+
+renderHeader:function(){
+var status=this.state.status;
+if(status === STATUS_REFRESH_IDLE){
+return this.props.renderHeaderRefreshIdle();}
+
+if(status === STATUS_WILL_REFRESH){
+return this.props.renderHeaderWillRefresh();}
+
+if(status === STATUS_REFRESHING){
+return this.props.renderHeaderRefreshing();}
+
+return null;},
+
+renderFooter:function(){
+var status=this.state.status;
+if(status === STATUS_INFINITE_IDLE){
+this.footerIsRender = true;
+return this.props.renderFooterInifiteIdle();}
+
+if(status === STATUS_WILL_INFINITE){
+this.footerIsRender = true;
+return this.props.renderFooterWillInifite();}
+
+if(status === STATUS_INFINITING){
+this.footerIsRender = true;
+return this.props.renderFooterInifiting();}
+
+this.footerIsRender = false;
+return null;},
+
+handleResponderGrant:function(event){
+var nativeEvent=event.nativeEvent;
+if(!nativeEvent.contentInset || this.state.status !== STATUS_NONE){
+return;}
+
+var y0=nativeEvent.contentInset.top + nativeEvent.contentOffset.y;
+if(y0 < 0){
+this.setState({status:STATUS_REFRESH_IDLE});
+return;}
+
+y0 = nativeEvent.contentInset.top + nativeEvent.contentOffset.y + 
+nativeEvent.layoutMeasurement.height - nativeEvent.contentSize.height;
+if(y0 > 0){
+this.initialInfiniteOffset = y0 > 0?y0:0;
+this.setState({status:STATUS_INFINITE_IDLE});}},
+
+
+hideHeader:function(){
+this.setState({status:STATUS_NONE});},
+
+hideFooter:function(){
+this.setState({status:STATUS_NONE});},
+
+handleResponderRelease:function(event){
+var status=this.state.status;
+if(status === STATUS_REFRESH_IDLE){
+this.setState({status:STATUS_NONE});}else 
+if(status === STATUS_WILL_REFRESH){
+this.setState({status:STATUS_REFRESHING});
+this.props.onRefresh();}else 
+if(status === STATUS_INFINITE_IDLE){
+this.setState({status:STATUS_NONE});}else 
+if(status === STATUS_WILL_INFINITE){
+this.setState({status:STATUS_INFINITING});
+this.props.onInfinite();}},
+
+
+handleScroll:function(event){
+var nativeEvent=event.nativeEvent;
+var status=this.state.status;
+if(status === STATUS_REFRESH_IDLE || status === STATUS_WILL_REFRESH){
+var y=nativeEvent.contentInset.top + nativeEvent.contentOffset.y;
+if(status !== STATUS_WILL_REFRESH && y < -this.props.pullDistance){
+this.setState({status:STATUS_WILL_REFRESH});}else 
+if(status === STATUS_WILL_REFRESH && y >= -this.props.pullDistance){
+this.setState({status:STATUS_REFRESH_IDLE});}
+
+return;}
+
+
+if(status === STATUS_INFINITE_IDLE || status === STATUS_WILL_INFINITE){
+var y=nativeEvent.contentInset.top + nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height - 
+nativeEvent.contentSize.height - this.initialInfiniteOffset;
+if(this.footerIsRender){
+y += this.props.footerHeight;}
+
+if(status !== STATUS_WILL_INFINITE && y > this.props.pullDistance){
+this.setState({status:STATUS_WILL_INFINITE});}else 
+if(status === STATUS_WILL_INFINITE && y <= this.props.pullDistance){
+this.setState({status:STATUS_INFINITE_IDLE});}}},
+
+
+
+render:function(){
+this.dataSource = null;
+if(!this.props.dataSource.getRowCount()){
+var DataSource=new ListView.DataSource({rowHasChanged:function(r1,r2){return r1 !== r2;}});
+this.dataSource = DataSource.cloneWithRows([""]);}
+
+
+return (
+React.createElement(ListView,_extends({},
+this.props,{
+dataSource:this.dataSource?this.dataSource:this.props.dataSource,
+renderRow:this.renderRow,
+renderHeader:this.renderHeader,
+renderFooter:this.renderFooter,
+onResponderGrant:this.handleResponderGrant,
+onResponderRelease:this.handleResponderRelease,
+onScroll:this.handleScroll,
+onLayout:this.handleLayout})));}});
+
+
+
+
+var styles=StyleSheet.create({
+text:{
+fontSize:14},
+
+image:{
+width:40,
+height:32},
+
+imageRotate:{
+transform:[{rotateX:'180deg'}]}});
+
+
+
+module.exports = RefreshInfiniteListView;
+});
+__d('anlint/App/Views/Components/pull_arrow.png',[],function(global, require, module, exports) {  module.exports = require("AssetRegistry").registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/leo/Desktop/anlint-react-022/App/Views/Components","httpServerLocation":"/assets/App/Views/Components","width":80,"height":80,"scales":[1],"hash":"1f0940058fd6b4e405fb626817a6fae9","name":"pull_arrow","type":"png"});
+});
+__d('anlint/App/Views/Home/styleScreen.js',["react-native/Libraries/react-native/react-native.js","react-native-refreshable-listview/index.js","react-timer-mixin/TimerMixin.js","anlint/App/Views/Components/webview.js","anlint/App/Views/Components/RefreshInfiniteListView.js"],function(global, require, module, exports) {  'use strict';
+
+
+
+
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
 
 
 StyleSheet=
@@ -53992,43 +54403,108 @@ StyleSheet=
 React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var ListView=React.ListView;var ActivityIndicatorIOS=React.ActivityIndicatorIOS;var PixelRatio=React.PixelRatio;var NavigatorIOS=React.NavigatorIOS;var TouchableHighlight=React.TouchableHighlight;var Dimensions=React.Dimensions;
 
 
+var RefreshableListView=require('react-native-refreshable-listview/index.js');
 
-var api_url='https://www.anlint.com/api/v1/lint/getall';
+var TimerMixin=require('react-timer-mixin/TimerMixin.js');
+
 var deviceWidth=Dimensions.get('window').width;
 
+var ArticleView=require('anlint/App/Views/Components/webview.js');
+var RefreshInfiniteListView=require('anlint/App/Views/Components/RefreshInfiniteListView.js');
+
+var api_url='https://www.anlint.com/api/v1/lint/getall';
+var base_api_url='https://www.anlint.com/api/v1/lint/getall?lastdate=';
+
+
+var ds=new ListView.DataSource({rowHasChanged:function(r1,r2){return r1 !== r2;}});
+var CACHE=[];
+
 var style=React.createClass({displayName:'style',
-getInitialState:function(){
-return {
+mixins:[TimerMixin],
+data:{index:0,list:[]},
+lastdate:String,
 
-dataSource:new ListView.DataSource({
-rowHasChanged:function(row1,row2){return row1 !== row2;}}),
+getData:function(init){var _this=this;
+var total=10;
+if(init){
+this.data.index = 0;
 
-loaded:false};},
-
-
-
-
-componentDidMount:function(){var _this=this;
 
 fetch(api_url).
 then(function(response){return response.json();}).
 then(function(responseData){
+_this.cache(responseData.Lints);
 _this.setState({
-dataSource:_this.state.dataSource.cloneWithRows(responseData.Lints),
 loaded:true});}).
 
 
-done();},
+catch(function(error){
+console.log("数据加载出错");}).
+
+done();}else 
+
+{
+console.log(base_api_url + this.lastdate);
+fetch(base_api_url + this.lastdate).
+then(function(response){return response.json();}).
+then(function(responseData){
+_this.cache(responseData.Lints);
+_this.setState({
+loaded:true});}).
+
+
+catch(function(error){
+console.log("数据加载出错");}).
+
+done();}},
 
 
 
-_reload:function(){var _this2=this;
+
+cache:function(items){
+for(var i in items) {
+CACHE.push(items[i]);}
+
+
+
+this.lastdate = new Date(items[items.length - 1].create_at).toISOString();
+console.log(this.lastdate);
+
+this.setState({
+dataSource:this.state.dataSource.cloneWithRows(CACHE)});},
+
+
+
+getInitialState:function(){
+this.getData(true);
+return {
+isLoadedAllData:false,
+dataSource:ds.cloneWithRows(CACHE)};},
+
+
+onRefresh:function(){var _this2=this;
+this.getData(true);
+this.setTimeout(function(){
+_this2.list.hideHeader();
+_this2.setState({dataSource:ds.cloneWithRows(CACHE)});},
+1000);},
+
+onInfinite:function(){var _this3=this;
+this.getData();
+this.setTimeout(function(){
+_this3.list.hideFooter();
+_this3.setState({dataSource:ds.cloneWithRows(CACHE)});},
+1000);},
+
+
+
+_reload:function(){var _this4=this;
 
 fetch(request_url).
 then(function(response){return response.json();}).
 then(function(responseData){
-_this2.setState({
-dataSource:_this2.state.dataSource.cloneWithRows(responseData.Lints),
+_this4.setState({
+dataSource:_this4.state.dataSource.cloneWithRows(CACHE),
 loaded:true});}).
 
 
@@ -54038,7 +54514,8 @@ done();},
 
 _itemPressed:function(articleTitle,articleId){
 var url="https://www.anlint.com/lifestyle/lints/" + articleId;
-var articleTitle="文章";},
+var articleTitle=articleTitle;},
+
 
 
 
@@ -54055,9 +54532,9 @@ renderRow:this.renderRow}));},
 
 
 
-renderRow:function(rowData){var _this3=this;
+renderRow:function(rowData){var _this5=this;
 return (
-React.createElement(TouchableHighlight,{onPress:function(){return _this3._itemPressed(rowData.id,rowData.id);},
+React.createElement(TouchableHighlight,{onPress:function(){return _this5._itemPressed(rowData.id,rowData.id);},
 underlayColor:'#dddddd'},
 React.createElement(View,null,
 React.createElement(View,{style:styles.card},
@@ -54083,20 +54560,22 @@ React.createElement(ActivityIndicatorIOS,null)));},
 
 
 
-render:function(){
-if(this.state.loaded){
+render:function(){var _this6=this;
+
 return (
-React.createElement(RefreshableListView,{
+React.createElement(RefreshInfiniteListView,{
+ref:function(list){_this6.list = list;},
 dataSource:this.state.dataSource,
 renderRow:this.renderRow,
-loadData:this.renderLoadingView,
-style:styles.topicListView,
-refreshDescription:'正在刷新...',
-minDisplayTime:500,
-minPulldownDistance:80,
-minBetweenTime:2000}));}else 
-{
-return this.renderLoadingView();}}});
+initialListSize:30,
+scrollEventThrottle:10,
+style:{backgroundColor:'transparent'},
+onRefresh:this.onRefresh,
+onInfinite:this.onInfinite}));}});
+
+
+
+
 
 
 
@@ -54125,20 +54604,19 @@ fontWeight:'bold',
 fontSize:18,
 color:'#000000',
 
-width:deviceWidth * 0.58},
+width:deviceWidth * 0.59},
 
 summary:{
 fontSize:13.5,
 color:'#656565',
 
-width:deviceWidth * 0.58,
+width:deviceWidth * 0.59,
 marginTop:5},
 
 thumbnail:{
 
 height:deviceWidth * 0.3,
-width:deviceWidth * 0.3,
-marginRight:10},
+width:deviceWidth * 0.3},
 
 separator:{
 height:0 / PixelRatio.get(),
@@ -54150,7 +54628,7 @@ borderWidth:1,
 backgroundColor:'#fff',
 borderColor:'rgba(0,0,0,0.1)',
 margin:5,
-padding:15,
+padding:10,
 shadowColor:'#ccc',
 shadowOffset:{width:2,height:2},
 shadowOpacity:0.5,

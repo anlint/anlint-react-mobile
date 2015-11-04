@@ -19,55 +19,99 @@ var {
   Dimensions
 } = React;
 
-var deviceWidth = Dimensions.get('window').width;
-var ArticleView = require('../Web/webview');
 var RefreshableListView = require('react-native-refreshable-listview');
+//var RefreshInfiniteListView = require('react-native-refresh-infinite-listview');
+var TimerMixin = require('react-timer-mixin');
 
-// var AppRegistry = React.AppRegistry;
-var request_url = 'http://leosblackboard.sinaapp.com/anlintapi';
+var deviceWidth = Dimensions.get('window').width;
+
+var ArticleView = require('../Components/webview');
+var RefreshInfiniteListView = require('../Components/RefreshInfiniteListView');
+
 var api_url = 'https://www.anlint.com/api/v1/serv/getall';
+var base_api_url = 'https://www.anlint.com/api/v1/serv/getall?lastdate=';
 
+// assumes immutable objects
+var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}) 
+var CACHE = [];
 
 var lifeScreen = React.createClass({
-  getInitialState: function() {
-    console.log(deviceWidth);
-    return {
-      //articles: []
-      dataSource: new ListView.DataSource({
-        rowHasChanged: (row1, row2) => row1 !== row2
-      }),
-      loaded: false
+  mixins: [TimerMixin],
+  data: {index: 0, list:[]},
+  lastdate: String,
+
+  getData(init) {
+    var total = 10;
+    if (init) {
+      this.data.index = 0;
+
+      // fetch Data
+      fetch(api_url)
+        .then((response) => response.json())
+        .then((responseData) => {
+          this.cache(responseData.Servs);
+          this.setState({
+            loaded: true,
+          });
+        })
+        .catch((error) => {
+          console.log("数据加载出错");
+        })
+        .done();  
+    }
+    else {
+      console.log(base_api_url + this.lastdate);
+      fetch(base_api_url + this.lastdate)
+        .then((response) => response.json())
+        .then((responseData) => {
+          this.cache(responseData.Servs);
+          this.setState({
+            loaded: true,
+          });
+        })
+        .catch((error) => {
+          console.log("数据加载出错");
+        })
+        .done();
     }
   },
 
-  // After render() will call this function
-  componentDidMount: function() {
-    // fetch Data
-    fetch(api_url)
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(responseData.Servs),
-          loaded: true
-        });
-      })
-      .done();
+  // 自定义函数处理网络获取数据，将数据放入全局变量CACHE
+  cache: function(items) {
+    for (var i in items) {
+      CACHE.push(items[i]);
+    }
+
+    // 获取最后一篇文章的时间并转化为标准格式
+    this.lastdate = new Date(items[items.length - 1].create_at).toISOString();
+    // console.log(this.lastdate);
+
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(CACHE),
+    });
   },
 
-
-  _reload() {
-    // fetch Data
-    fetch(request_url)
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(responseData),
-          loaded: true
-        });
-      })
-      .done();
+  getInitialState() {
+      this.getData(true);
+      return {
+        isLoadedAllData: false,
+        dataSource: ds.cloneWithRows(CACHE)
+      }
   },
-
+  onRefresh() {
+    this.getData(true);
+    this.setTimeout(()=>{
+        this.list.hideHeader();
+        this.setState({dataSource: ds.cloneWithRows(CACHE)});
+    }, 1000);
+  },
+  onInfinite() {
+    this.getData();
+    this.setTimeout(()=>{
+      this.list.hideFooter();
+      this.setState({dataSource: ds.cloneWithRows(CACHE)});
+    }, 1000);
+  },
 
   _onPress(articleTitle, articleLink) {
     var url = articleLink;
@@ -82,17 +126,16 @@ var lifeScreen = React.createClass({
 
   renderList: function() {
     return(
-      <UIExplorerPage
-        title={this.props.navigator ? null : '<ListView> - Simple'}
-        noSpacer={true}
-        noScroll={true}>
-        <ListView
-          style = {styles.topicListView}
-          dataSource = {this.state.dataSource}
-          renderRow = {this.renderRow} 
-          canLoadMore={this.state.canLoadMoreContent}
-          isLoadingMore={this.state.isLoadingContent} />
-      </UIExplorerPage>
+      <RefreshInfiniteListView
+          ref = {(list) => {this.list= list}}
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow}
+          initialListSize={30}
+          scrollEventThrottle={10}
+          style={{backgroundColor:'transparent'/*,top:100, left:10, width:200, height:300, position:'absolute'*/}}
+          onRefresh = {this.onRefresh}
+          onInfinite = {this.onInfinite} >
+        </RefreshInfiniteListView>
     );
   },
 
@@ -107,7 +150,6 @@ var lifeScreen = React.createClass({
             <View  style={styles.textContainer}>
               <Text style={styles.topicTitle} numberOfLines={2}>{rowData.title}</Text>
             </View>
-            
           </View>
           <View style={styles.separator}/>
         </View>
@@ -127,19 +169,21 @@ var lifeScreen = React.createClass({
   render: function() {
     if (this.state.loaded) {
       return(
-        <RefreshableListView
+        <RefreshInfiniteListView
+          ref = {(list) => {this.list= list}}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow}
-          loadData={this.renderLoadingView}
-          style={styles.topicListView}
-          refreshDescription="正在刷新..."
-          minDisplayTime={500}
-          minPulldownDistance={80}
-          minBetweenTime={2000} />);
+          initialListSize={30}
+          scrollEventThrottle={10}
+          style={{backgroundColor:'transparent'/*,top:100, left:10, width:200, height:300, position:'absolute'*/}}
+          onRefresh = {this.onRefresh}
+          onInfinite = {this.onInfinite} >
+        </RefreshInfiniteListView>
+      );
     } else {
       return this.renderLoadingView();
     }
-  },
+  }
 
 });
 

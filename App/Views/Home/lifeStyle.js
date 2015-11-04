@@ -25,6 +25,8 @@ var LifeScreen = require('./lifeScreen');
 var StyleScreen = require('./styleScreen');
 var CustomTabBar = require('./CustomTabBar');
 
+var RefreshInfiniteListView = require('../Components/RefreshInfiniteListView');
+
 
 var lifeStyle = React.createClass({
   getInitialState: function() {
@@ -45,7 +47,6 @@ var lifeStyle = React.createClass({
 
         <LifeScreen tabLabel="生活" navigator={this.props.navigator}/>
         <StyleScreen tabLabel="方式" navigator={this.props.navigator}/>
-          
       </ScrollableTabView>
       );
   },

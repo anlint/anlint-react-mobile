@@ -11,6 +11,7 @@ var {
   NavigatorIOS,
   StyleSheet,
   TabBarIOS,
+  StatusBarIOS,
   View,
   Text,
   ScrollView,
@@ -27,11 +28,16 @@ var LifeScreen = require('./App/Views/Home/lifeScreen')
 
 var anlint = React.createClass({
   getInitialState: function() {
+    StatusBarIOS.setStyle(1);   // 1是白色，0是默认的黑色
     return {
       selectedTab: 'lifeTab',
       notifCount: 0,
       presses: 0,
     };
+  },
+
+  componentDidMount: function() {
+
   },
 
   _renderContent: function(color: string, pageText: string, num?: number) {
