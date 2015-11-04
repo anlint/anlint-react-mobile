@@ -42,7 +42,7 @@ var style = React.createClass({
     lastdate: String,
 
     getData(init) {
-        fetch(init?api_url:base_api_url + this.lastdate)
+        fetch(init?api_url:(base_api_url + this.lastdate))
           .then((response) => response.json())
           .then((responseData) => {
             if(responseData.Lints){

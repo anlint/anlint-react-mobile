@@ -125,7 +125,6 @@ var lifeScreen = React.createClass({
   },
 
   renderRow: function(rowData) {
-    //var movie = {title:'美食 | 别辜负冰淇淋的一片盛情', date:'2015-09-18', posters: {thumbnail: 'https://dn-anlint0.qbox.me/FseCOstTejRXgca9NYcwW2KE4ueA'}}
     return (
       <TouchableHighlight onPress={() => this._onPress(rowData.title, rowData.link)}
           underlayColor='#dddddd'>
@@ -136,7 +135,6 @@ var lifeScreen = React.createClass({
               <Text style={styles.topicTitle} numberOfLines={2}>{rowData.title}</Text>
             </View>
           </View>
-          <View style={styles.separator}/>
         </View>
       </TouchableHighlight>
     );
@@ -206,7 +204,7 @@ var styles = StyleSheet.create({
   thumbnail: {
     //width: 170 * PixelRatio.get(),
     //height: 100 * PixelRatio.get(),
-    width: deviceWidth - 32,
+    width: deviceWidth - 18,
     height: 150,
   },
   separator: {
@@ -232,6 +230,7 @@ var styles = StyleSheet.create({
     borderRadius: 0
   },
   topicTitle: {
+    padding: 5,
     fontSize: 16,
     lineHeight: 20,
     fontWeight: 'bold',
@@ -244,8 +243,10 @@ var styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#fff',
     borderColor: 'rgba(0,0,0,0.1)',
-    margin: 5,
-    padding: 10,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+    padding: 0,
     shadowColor: '#ccc',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.5,
