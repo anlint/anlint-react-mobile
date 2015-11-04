@@ -99,5 +99,4 @@ Example: `react-native bundle --minify --dev=false`
 
 
 
-
 [1]:	https://anlint.com

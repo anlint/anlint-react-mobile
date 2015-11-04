@@ -48,9 +48,6 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="186" y="432" width="108" height="21"/>
-                    </variation>
                     <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                         <rect key="frame" x="189" y="417" width="102.5" height="20.5"/>
                     </variation>
@@ -91,6 +88,10 @@
                     <exclude reference="RRI-sP-9NI"/>
                 </mask>
                 <mask key="constraints">
+                    <exclude reference="3sE-AH-9uA"/>
+                    <exclude reference="8xw-0J-cxW"/>
+                    <exclude reference="NZo-fW-Jwp"/>
+                    <exclude reference="uME-SE-6cS"/>
                     <exclude reference="6ee-bV-KQi"/>
                     <exclude reference="7R7-GW-TOr"/>
                     <exclude reference="8MF-m8-EDD"/>
@@ -99,10 +100,6 @@
                     <exclude reference="R9c-vW-QKb"/>
                     <exclude reference="iLe-kk-YjF"/>
                     <exclude reference="oWe-u1-cBD"/>
-                    <exclude reference="3sE-AH-9uA"/>
-                    <exclude reference="8xw-0J-cxW"/>
-                    <exclude reference="NZo-fW-Jwp"/>
-                    <exclude reference="uME-SE-6cS"/>
                 </mask>
             </variation>
             <variation key="widthClass=compact">
@@ -111,13 +108,13 @@
                     <include reference="RRI-sP-9NI"/>
                 </mask>
                 <mask key="constraints">
+                    <include reference="3sE-AH-9uA"/>
+                    <include reference="uME-SE-6cS"/>
                     <exclude reference="6ee-bV-KQi"/>
                     <include reference="8MF-m8-EDD"/>
                     <include reference="R9c-vW-QKb"/>
                     <exclude reference="l71-lv-dUk"/>
                     <exclude reference="oqk-ct-Fe2"/>
-                    <include reference="3sE-AH-9uA"/>
-                    <include reference="uME-SE-6cS"/>
                 </mask>
             </variation>
             <variation key="heightClass=compact-widthClass=compact">
@@ -127,6 +124,9 @@
             </variation>
             <variation key="heightClass=regular-widthClass=compact">
                 <mask key="constraints">
+                    <exclude reference="8xw-0J-cxW"/>
+                    <include reference="NZo-fW-Jwp"/>
+                    <exclude reference="uME-SE-6cS"/>
                     <include reference="7R7-GW-TOr"/>
                     <exclude reference="8MF-m8-EDD"/>
                     <include reference="D6O-qt-wWe"/>
@@ -136,9 +136,6 @@
                     <exclude reference="l71-lv-dUk"/>
                     <exclude reference="oWe-u1-cBD"/>
                     <exclude reference="oqk-ct-Fe2"/>
-                    <exclude reference="8xw-0J-cxW"/>
-                    <include reference="NZo-fW-Jwp"/>
-                    <exclude reference="uME-SE-6cS"/>
                 </mask>
             </variation>
             <point key="canvasLocation" x="548" y="455"/>
