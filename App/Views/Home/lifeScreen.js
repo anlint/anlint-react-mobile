@@ -32,7 +32,7 @@ var api_url = 'https://www.anlint.com/api/v1/serv/getall';
 var base_api_url = 'https://www.anlint.com/api/v1/serv/getall?lastdate=';
 
 // assumes immutable objects
-var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}) 
+var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
 var CACHE = [];
 
 var lifeScreen = React.createClass({
@@ -41,50 +41,32 @@ var lifeScreen = React.createClass({
   lastdate: String,
 
   getData(init) {
-    var total = 10;
-    if (init) {
-      this.data.index = 0;
-
-      // fetch Data
-      fetch(api_url)
+      fetch(init?api_url:(base_api_url + this.lastdate))
         .then((response) => response.json())
         .then((responseData) => {
-          this.cache(responseData.Servs);
+          if(responseData.Servs){
+            if(init) CACHE = [];
+            this.cache(responseData.Servs);
+          }else{
+            //notify no data
+          }
           this.setState({
             loaded: true,
           });
         })
         .catch((error) => {
-          console.log("数据加载出错");
-        })
-        .done();  
-    }
-    else {
-      console.log(base_api_url + this.lastdate);
-      fetch(base_api_url + this.lastdate)
-        .then((response) => response.json())
-        .then((responseData) => {
-          this.cache(responseData.Servs);
-          this.setState({
-            loaded: true,
-          });
-        })
-        .catch((error) => {
-          console.log("数据加载出错");
+          console.log(error);
         })
         .done();
-    }
-  },
 
+  },
   // 自定义函数处理网络获取数据，将数据放入全局变量CACHE
   cache: function(items) {
     for (var i in items) {
       CACHE.push(items[i]);
     }
-
     // 获取最后一篇文章的时间并转化为标准格式
     this.lastdate = new Date(items[items.length - 1].create_at).toISOString();
-    // console.log(this.lastdate);
 
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(CACHE),
