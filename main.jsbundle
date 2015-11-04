@@ -1,5 +1,5 @@
 __DEV__ = 
-true;
+false;
 
 
 __BUNDLE_START_TIME__ = Date.now();
@@ -53643,10 +53643,11 @@ React.createElement(ScrollableTabView,{
 renderTabBar:function(){return React.createElement(CustomTabBar,{someProp:'here'});},
 sceneContainerStyle:styles.scence,
 edgeHitWidth:99,
-scrollsToTop:false},
+scrollsToTop:true},
 
 React.createElement(LifeScreen,{tabLabel:'生活',navigator:this.props.navigator}),
 React.createElement(StyleScreen,{tabLabel:'方式',navigator:this.props.navigator})));}});
+
 
 
 
@@ -53838,6 +53839,7 @@ passProps:{url:url}});},
 
 renderList:function(){var _this4=this;
 return (
+React.createElement(View,{style:{flex:1,flexDirection:'column',justifyContent:'center'}},
 React.createElement(RefreshInfiniteListView,{
 ref:function(list){_this4.list = list;},
 dataSource:this.state.dataSource,
@@ -53846,7 +53848,9 @@ initialListSize:30,
 scrollEventThrottle:10,
 style:{backgroundColor:'transparent'},
 onRefresh:this.onRefresh,
-onInfinite:this.onInfinite}));},
+onInfinite:this.onInfinite}),
+
+React.createElement(View,{style:{height:60}})));},
 
 
 
@@ -53878,20 +53882,9 @@ React.createElement(ActivityIndicatorIOS,null)));},
 
 
 
-render:function(){var _this6=this;
+render:function(){
 if(this.state.loaded){
-return (
-React.createElement(RefreshInfiniteListView,{
-ref:function(list){_this6.list = list;},
-dataSource:this.state.dataSource,
-renderRow:this.renderRow,
-initialListSize:30,
-scrollEventThrottle:10,
-style:{backgroundColor:'transparent'},
-onRefresh:this.onRefresh,
-onInfinite:this.onInfinite}));}else 
-
-
+return this.renderList();}else 
 {
 return this.renderLoadingView();}}});
 
@@ -53902,6 +53895,11 @@ return this.renderLoadingView();}}});
 
 
 var styles=StyleSheet.create({
+Containner:{
+flex:1,
+flexDirection:'column',
+justifyContent:'center'},
+
 loadingContainner:{
 flex:1,
 flexDirection:'column',
@@ -53926,20 +53924,20 @@ fontWeight:'bold',
 fontSize:14,
 color:'#333444',
 padding:5,
-width:deviceWidth - 40},
+width:deviceWidth - 32},
 
 summary:{
 fontSize:13.5,
 
 color:'white',
-width:deviceWidth - 40,
+width:deviceWidth - 32,
 padding:5,
 backgroundColor:''},
 
 thumbnail:{
 
 
-width:deviceWidth - 40,
+width:deviceWidth - 32,
 height:150},
 
 separator:{
@@ -53969,7 +53967,7 @@ fontSize:16,
 lineHeight:20,
 fontWeight:'bold',
 letterSpacing:1,
-
+width:deviceWidth - 32,
 color:'#333333'},
 
 card:{
@@ -54111,7 +54109,7 @@ React.createElement(WebView,{url:this.props.url})));}});
 
 module.exports = Web;
 });
-__d('anlint/App/Views/Components/RefreshInfiniteListView.js',["react-native/Libraries/react-native/react-native.js","anlint/App/Views/Components/pull_arrow.png","anlint/App/Views/Components/pull_arrow.png","anlint/App/Views/Components/pull_arrow.png","anlint/App/Views/Components/pull_arrow.png"],function(global, require, module, exports) {  'use strict';var _extends=Object.assign || function(target){for(var i=1;i < arguments.length;i++) {var source=arguments[i];for(var key in source) {if(Object.prototype.hasOwnProperty.call(source,key)){target[key] = source[key];}}}return target;};
+__d('anlint/App/Views/Components/RefreshInfiniteListView.js',["image!pull_arrow","image!pull_arrow","image!pull_arrow","image!pull_arrow","react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  'use strict';var _extends=Object.assign || function(target){for(var i=1;i < arguments.length;i++) {var source=arguments[i];for(var key in source) {if(Object.prototype.hasOwnProperty.call(source,key)){target[key] = source[key];}}}return target;};
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -54167,7 +54165,7 @@ React.createElement(Text,{style:styles.text},'下拉刷新...'),
 
 
 React.createElement(Image,{
-source:require('anlint/App/Views/Components/pull_arrow.png'),
+source:require('image!pull_arrow'),
 resizeMode:Image.resizeMode.stretch,
 style:styles.image})));},
 
@@ -54179,7 +54177,7 @@ React.createElement(Text,{style:styles.text},'松开刷新...'),
 
 
 React.createElement(Image,{
-source:require('anlint/App/Views/Components/pull_arrow.png'),
+source:require('image!pull_arrow'),
 resizeMode:Image.resizeMode.stretch,
 style:[styles.image,styles.imageRotate]})));},
 
@@ -54199,7 +54197,7 @@ animating:true})));},
 renderFooterInifiteIdle:function(){return (
 React.createElement(View,{style:{height:DEFAULT_HF_HEIGHT,justifyContent:'center',alignItems:'center'}},
 React.createElement(Image,{
-source:require('anlint/App/Views/Components/pull_arrow.png'),
+source:require('image!pull_arrow'),
 resizeMode:Image.resizeMode.stretch,
 style:[styles.image,styles.imageRotate]}),
 React.createElement(Text,{style:styles.text},'上拉更多...')));},
@@ -54210,7 +54208,7 @@ React.createElement(Text,{style:styles.text},'上拉更多...')));},
 renderFooterWillInifite:function(){return (
 React.createElement(View,{style:{height:DEFAULT_HF_HEIGHT,justifyContent:'center',alignItems:'center'}},
 React.createElement(Image,{
-source:require('anlint/App/Views/Components/pull_arrow.png'),
+source:require('image!pull_arrow'),
 resizeMode:Image.resizeMode.stretch,
 style:styles.image}),
 React.createElement(Text,{style:styles.text},'松开加载更多...')));},
@@ -54350,6 +54348,7 @@ this.dataSource = DataSource.cloneWithRows([""]);}
 
 
 return (
+
 React.createElement(ListView,_extends({},
 this.props,{
 dataSource:this.dataSource?this.dataSource:this.props.dataSource,
@@ -54379,7 +54378,7 @@ transform:[{rotateX:'180deg'}]}});
 
 module.exports = RefreshInfiniteListView;
 });
-__d('anlint/App/Views/Components/pull_arrow.png',[],function(global, require, module, exports) {  module.exports = require("AssetRegistry").registerAsset({"__packager_asset":true,"fileSystemLocation":"/Users/leo/Desktop/anlint-react-022/App/Views/Components","httpServerLocation":"/assets/App/Views/Components","width":80,"height":80,"scales":[1],"hash":"1f0940058fd6b4e405fb626817a6fae9","name":"pull_arrow","type":"png"});
+__d('image!pull_arrow',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/leo/Desktop/anlint-react-022/ios/anlint/Images.xcassets/pull_arrow.imageset/pull_arrow.png","uri":"pull_arrow","width":80,"height":80,"deprecated":true};
 });
 __d('anlint/App/Views/Home/styleScreen.js',["react-native/Libraries/react-native/react-native.js","react-native-refreshable-listview/index.js","react-timer-mixin/TimerMixin.js","anlint/App/Views/Components/webview.js","anlint/App/Views/Components/RefreshInfiniteListView.js"],function(global, require, module, exports) {  'use strict';
 
@@ -54524,22 +54523,37 @@ var articleTitle=articleTitle;},
 
 
 
-renderList:function(){
+renderList:function(){var _this5=this;
 return (
-React.createElement(ListView,{
+React.createElement(View,{style:{flex:1,flexDirection:'column',justifyContent:'center'}},
+React.createElement(RefreshInfiniteListView,{
+ref:function(list){_this5.list = list;},
 dataSource:this.state.dataSource,
-renderRow:this.renderRow}));},
+renderRow:this.renderRow,
+initialListSize:30,
+scrollEventThrottle:10,
+style:{backgroundColor:'transparent'},
+onRefresh:this.onRefresh,
+onInfinite:this.onInfinite}),
+
+React.createElement(View,{style:{height:80}})));},
 
 
 
-renderRow:function(rowData){var _this5=this;
+
+renderRow:function(rowData){var _this6=this;
+var dayDiff=(Date.now() - new Date(rowData.create_at)) / (24 * 3600 * 1000);
+
 return (
-React.createElement(TouchableHighlight,{onPress:function(){return _this5._itemPressed(rowData.id,rowData.id);},
+React.createElement(TouchableHighlight,{onPress:function(){return _this6._itemPressed(rowData.id,rowData.id);},
 underlayColor:'#dddddd'},
 React.createElement(View,null,
 React.createElement(View,{style:styles.card},
 React.createElement(View,{style:styles.textContainer},
+React.createElement(View,{style:styles.titleContainner},
 React.createElement(Text,{style:styles.title,numberOfLines:2},rowData.pubname),
+React.createElement(Text,{style:styles.date,numberOfLines:1},Math.round(dayDiff),'天前发布')),
+
 React.createElement(Text,{style:styles.summary,numberOfLines:4},rowData.text)),
 
 React.createElement(Image,{style:styles.thumbnail,source:{uri:rowData.pic}})),
@@ -54560,22 +54574,11 @@ React.createElement(ActivityIndicatorIOS,null)));},
 
 
 
-render:function(){var _this6=this;
-
-return (
-React.createElement(RefreshInfiniteListView,{
-ref:function(list){_this6.list = list;},
-dataSource:this.state.dataSource,
-renderRow:this.renderRow,
-initialListSize:30,
-scrollEventThrottle:10,
-style:{backgroundColor:'transparent'},
-onRefresh:this.onRefresh,
-onInfinite:this.onInfinite}));}});
-
-
-
-
+render:function(){
+if(this.state.loaded){
+return this.renderList();}else 
+{
+return this.renderLoadingView();}}});
 
 
 
@@ -54599,18 +54602,29 @@ textContinner:{
 flex:3,
 width:deviceWidth * 0.65},
 
+titleContainner:{
+flex:1,
+flexDirection:'row'},
+
 title:{
 fontWeight:'bold',
 fontSize:18,
 color:'#000000',
 
-width:deviceWidth * 0.59},
+paddingRight:10},
+
+date:{
+fontWeight:'200',
+fontSize:10,
+color:'#333444',
+paddingTop:5},
 
 summary:{
 fontSize:13.5,
 color:'#656565',
 
-width:deviceWidth * 0.59,
+width:deviceWidth * 0.62,
+paddingRight:10,
 marginTop:5},
 
 thumbnail:{

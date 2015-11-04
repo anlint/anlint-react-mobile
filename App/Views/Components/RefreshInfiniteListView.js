@@ -86,7 +86,7 @@ var RefreshInfiniteListView = React.createClass({
       renderFooterInifiteIdle: () => {return (
         <View style={{height:DEFAULT_HF_HEIGHT, justifyContent:'center', alignItems:'center'}}>
           <Image
-            source={require('./pull_arrow.png')}
+            source={require('image!pull_arrow')}
             resizeMode={Image.resizeMode.stretch}
             style={[styles.image, styles.imageRotate]} />
           <Text style={styles.text}>
@@ -97,7 +97,7 @@ var RefreshInfiniteListView = React.createClass({
       renderFooterWillInifite: () => {return (
         <View style={{height:DEFAULT_HF_HEIGHT, justifyContent:'center', alignItems:'center'}}>
           <Image
-            source={require('./pull_arrow.png')}
+            source={require('image!pull_arrow')}
             resizeMode={Image.resizeMode.stretch}
             style={styles.image} />
           <Text style={styles.text}>

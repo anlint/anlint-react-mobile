@@ -160,13 +160,18 @@ var style = React.createClass({
   },
 
   renderRow: function(rowData) {
+    var dayDiff = (Date.now() - new Date(rowData.create_at)) / (24*3600*1000);
+
     return (
       <TouchableHighlight onPress={() => this._itemPressed(rowData.id, rowData.id)}
           underlayColor='#dddddd'>
         <View>
           <View style={styles.card}>
-            <View  style={styles.textContainer}>
-              <Text style={styles.title} numberOfLines={2}>{rowData.pubname}</Text>
+            <View style={styles.textContainer}>
+              <View style={styles.titleContainner}>
+                <Text style={styles.title} numberOfLines={2}>{rowData.pubname}</Text>
+                <Text style={styles.date} numberOfLines={1}>{Math.round(dayDiff)}天前发布</Text>
+              </View>
               <Text style={styles.summary} numberOfLines={4}>{rowData.text}</Text>
             </View>
             <Image style={styles.thumbnail} source={{ uri: rowData.pic }} />
@@ -215,18 +220,29 @@ var styles = StyleSheet.create({
     flex: 3,
     width: deviceWidth * 0.65,
   },
+  titleContainner: {
+    flex:1,
+    flexDirection:'row'
+  },
   title: {
     fontWeight: 'bold',
     fontSize: 18,
     color: '#000000',
-    //width: 125 * PixelRatio.get(),
-    width: deviceWidth * 0.59,
+    //width: deviceWidth * 0.62,
+    paddingRight: 10
+  },
+  date: {
+    fontWeight: '200',
+    fontSize: 10,
+    color: '#333444',
+    paddingTop: 5
   },
   summary: {
     fontSize: 13.5,
     color: '#656565',
     //width: 120 * PixelRatio.get(),
-    width: deviceWidth * 0.59,
+    width: deviceWidth * 0.62,
+    paddingRight: 10,
     marginTop: 5
   },
   thumbnail: {

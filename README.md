@@ -8,6 +8,7 @@
 `npm start`
 
 
+
 ## 调试
 ###iOS 真机调试
 
@@ -46,6 +47,8 @@ minify(默认的 false)——只要不通过 UglifyJS 传输 JS 代码。
 
 Example: `react-native bundle --minify --dev=false`
 
+
+关闭开发选项： `curl "http://localhost:8081/index.ios.bundle?platform=ios&dev=false" -o main.jsbundle`
 
 
 ####Xcode7上运行报错解决方法
