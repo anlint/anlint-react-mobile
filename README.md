@@ -86,6 +86,8 @@ Example: `react-native bundle --minify --dev=false`
 2. 新增上拉load more
 3. bundle identifier 修改为 `com.anlint.style`
 4. 新增方式页面的时间显示
+5. 新增用户头像显示
+6. 新增方式详情页显示（点击后跳转到详情页面显示全部内容）
 
 
 
