@@ -21,8 +21,8 @@ var ScrollableTabView = require('react-native-scrollable-tab-view');
 var RefreshableListView = require('react-native-refreshable-listview');
 var deviceWidth = Dimensions.get('window').width;
 
-var LifeScreen = require('./lifeScreen');
-var StyleScreen = require('./styleScreen');
+var LifeScreen = require('./LifeScreen');
+var StyleScreen = require('./StyleScreen');
 var CustomTabBar = require('./CustomTabBar');
 
 var RefreshInfiniteListView = require('../Components/RefreshInfiniteListView');

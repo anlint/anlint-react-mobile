@@ -8,6 +8,7 @@
 `npm start`
 
 
+
 ## 调试
 ###iOS 真机调试
 
@@ -47,6 +48,8 @@ minify(默认的 false)——只要不通过 UglifyJS 传输 JS 代码。
 Example: `react-native bundle --minify --dev=false`
 
 
+关闭开发选项： `curl "http://localhost:8081/index.ios.bundle?platform=ios&dev=false" -o main.jsbundle`
+
 
 ####Xcode7上运行报错解决方法
 
@@ -78,23 +81,32 @@ Example: `react-native bundle --minify --dev=false`
 2. 改进了方式页的显示方式
 3. 新增了下拉刷新
 
+### 0.3.0
+1. 底部显示不完全的bug修复，下拉刷新bug修复
+2. 新增上拉load more
+3. bundle identifier 修改为 `com.anlint.style`
+4. 新增方式页面的时间显示
+5. 新增用户头像显示
+6. 新增方式详情页显示（点击后跳转到详情页面显示全部内容）
 
 
 
 
-## to do list
+
+## 0.x.x to do list
+- 代码重构，进一步模块化
 - ~~加入顶部二级导航栏~~
 - ~~首页UI调整（改为卡片模式）~~
 - 实现加载缓存判断
-- 代码重构，进一步模块化
 - ~~适配更多尺寸的屏幕~~
 - **添加上拉加载更多**
 
-## bug list
-- 滚到底部有一部分内容显示不了
+## 0.x.x bug list
+- ~~滚到底部有一部分内容显示不了~~
 - ListView的卡片式布局，右边的padding没有显示出来
-- ScrollTabView里嵌套的页面点击StatusBar没有办法滚动到顶部，WebView页面则没有问题
-- 下拉刷新还有一些bug
+- **ScrollTabView里嵌套的页面点击StatusBar没有办法滚动到顶部，WebView页面则没有问题**
+- ~~下拉刷新还有一些bug~~
+- 在`RefreshInfiniteListView`中为`ListView`下方添加了一定高度但是内容为空的`View`后，方式页面下方多出一定的空白
 
 
 

@@ -27,6 +27,7 @@ var TimerMixin = require('react-timer-mixin');
 var deviceWidth = Dimensions.get('window').width;
 
 var ArticleView = require('../Components/webview');
+var StyleDetailView = require('./StyleDetail');
 var RefreshInfiniteListView = require('../Components/RefreshInfiniteListView');
 
 var api_url = 'https://www.anlint.com/api/v1/lint/getall';
@@ -36,7 +37,7 @@ var base_api_url = 'https://www.anlint.com/api/v1/lint/getall?lastdate=';
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
 var CACHE = [];
 
-var style = React.createClass({
+var StyleScreen = React.createClass({
   mixins: [TimerMixin],
     data: {index: 0, list:[]},
     lastdate: String,
@@ -70,7 +71,7 @@ var style = React.createClass({
 
       // 获取最后一篇文章的时间并转化为标准格式
       this.lastdate = new Date(items[items.length - 1].create_at).toISOString();
-      console.log(this.lastdate);
+      //console.log(this.lastdate);
 
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(CACHE),
@@ -114,16 +115,13 @@ var style = React.createClass({
   },
 
 
-  _itemPressed(articleTitle, articleId) {
-    var url = "https://www.anlint.com/lifestyle/lints/" + articleId;
-    var articleTitle = articleTitle;
-
-    // 暂时不允许打开方式页面
-    // this.props.navigator.push({
-    //   title: articleTitle,
-    //   component: ArticleView,
-    //   passProps: {url: url}
-    // });
+  _itemPressed(rowData) {
+    var articleTitle = "方式";
+    this.props.navigator.push({
+      title: articleTitle,
+      component: StyleDetailView,
+      passProps: {rowData: rowData}
+    });
   },
 
   renderList: function() {
@@ -145,14 +143,45 @@ var style = React.createClass({
   },
 
   renderRow: function(rowData) {
+    var dayDiff = (Date.now() - new Date(rowData.create_at)) / (24*3600*1000);
+    
+    //无图模式
+    if(!rowData.pic)
+    {
+      for(var item in rowData) {
+        console.log(item + "==" + rowData[item]);
+      }
+
+      return(
+        <TouchableHighlight onPress={() => this._itemPressed(rowData.id, rowData.id)}
+            underlayColor='#dddddd'>
+          <View>
+            <View style={styles.card}>
+              <View style={styles.textContainer}>
+                <View style={styles.titleContainner}>
+                  <Text style={styles.title} numberOfLines={2}>{rowData.pubname}</Text>
+                  <Text style={styles.date} numberOfLines={1}>{Math.round(dayDiff)}天前发布</Text>
+                </View>
+                <Text style={styles.summaryWithoutWidth} numberOfLines={6}>{rowData.text}</Text>
+              </View>
+            </View>
+            <View style={styles.separator}/>
+          </View>
+        </TouchableHighlight>
+      );
+    }
     return (
-      <TouchableHighlight onPress={() => this._itemPressed(rowData.id, rowData.id)}
+      <TouchableHighlight onPress={() => this._itemPressed(rowData)}
           underlayColor='#dddddd'>
         <View>
           <View style={styles.card}>
-            <View  style={styles.textContainer}>
-              <Text style={styles.title} numberOfLines={2}>{rowData.pubname}</Text>
-              <Text style={styles.summary} numberOfLines={4}>{rowData.text}</Text>
+            <View style={styles.textContainer}>
+              <View style={styles.titleContainner}>
+                <Image style={styles.headimg} source={{ uri:rowData.headimg }} />
+                <Text style={styles.title} numberOfLines={2}>{rowData.pubname}</Text>
+                <Text style={styles.date} numberOfLines={1}>{Math.round(dayDiff)}天前发布</Text>
+              </View>
+              <Text style={styles.summary} numberOfLines={6}>{rowData.text}</Text>
             </View>
             <Image style={styles.thumbnail} source={{ uri: rowData.pic }} />
           </View>
@@ -196,22 +225,41 @@ var styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 20
   },
-  textContinner: {
-    flex: 3,
-    width: deviceWidth * 0.65,
+  titleContainner: {
+    flex:1,
+    flexDirection:'row'
+  },
+  headimg: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
   },
   title: {
     fontWeight: 'bold',
     fontSize: 18,
     color: '#000000',
-    //width: 125 * PixelRatio.get(),
-    width: deviceWidth * 0.59,
+    //width: deviceWidth * 0.62,
+    paddingRight: 10,
+    marginLeft: 3
+  },
+  date: {
+    fontWeight: '200',
+    fontSize: 10,
+    color: '#333444',
+    paddingTop: 5
   },
   summary: {
     fontSize: 13.5,
     color: '#656565',
     //width: 120 * PixelRatio.get(),
-    width: deviceWidth * 0.59,
+    width: deviceWidth * 0.62,
+    paddingRight: 10,
+    marginTop: 5
+  },
+  summaryWithoutWidth: {
+    fontSize: 13.5,
+    color: '#656565',
+    width: deviceWidth * 0.92,
     marginTop: 5
   },
   thumbnail: {
@@ -237,4 +285,4 @@ var styles = StyleSheet.create({
   },
 });
 
-module.exports = style;
+module.exports = StyleScreen;
