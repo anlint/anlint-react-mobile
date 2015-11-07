@@ -35,7 +35,7 @@ var base_api_url = 'https://www.anlint.com/api/v1/serv/getall?lastdate=';
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
 var CACHE = [];
 
-var lifeScreen = React.createClass({
+var LifeScreen = React.createClass({
   mixins: [TimerMixin],
   data: {index: 0, list:[]},
   lastdate: String,
@@ -254,4 +254,4 @@ var styles = StyleSheet.create({
   },
 });
 
-module.exports = lifeScreen;
+module.exports = LifeScreen;
