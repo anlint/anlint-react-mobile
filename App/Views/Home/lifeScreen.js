@@ -115,7 +115,7 @@ var lifeScreen = React.createClass({
           renderRow={this.renderRow}
           initialListSize={30}
           scrollEventThrottle={10}
-          style={{backgroundColor:'transparent'/*,top:100, left:10, width:200, height:300, position:'absolute'*/}}
+          style={{backgroundColor:'transparent'}}
           onRefresh = {this.onRefresh}
           onInfinite = {this.onInfinite} >
         </RefreshInfiniteListView>
