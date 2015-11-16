@@ -35,7 +35,7 @@ var api_url = 'https://www.anlint.com/api/v1/lint/getall';
 var base_api_url = 'https://www.anlint.com/api/v1/lint/getall?lastdate=';
 
 // assumes immutable objects
-var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}) 
+var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
 var CACHE = [];
 
 var StyleScreen = React.createClass({
@@ -44,12 +44,7 @@ var StyleScreen = React.createClass({
     lastdate: String,
 
     getData(init) {
-      var total = 10;
-      if (init) {
-        this.data.index = 0;
-
-        // fetch Data
-        fetch(api_url)
+        fetch(init?api_url:(base_api_url + this.lastdate))
           .then((response) => response.json())
           .then((responseData) => {
             this.cache(responseData.Lints);
@@ -75,6 +70,12 @@ var StyleScreen = React.createClass({
           .then((response) => response.json())
           .then((responseData) => {
             this.cache(responseData.Lints);
+            if(responseData.Lints){
+              if(init) CACHE = [];
+              this.cache(responseData.Lints);
+            }else{
+              //no data
+            }
             this.setState({
               loaded: true,
             });
@@ -90,7 +91,7 @@ var StyleScreen = React.createClass({
             );
           })
           .done();
-      }
+
     },
 
     // 自定义函数处理网络获取数据，将数据放入全局变量CACHE
