@@ -16,7 +16,8 @@ var {
   PixelRatio,
   NavigatorIOS,
   TouchableHighlight,
-  Dimensions
+  Dimensions,
+  AlertIOS
 } = React;
 
 
@@ -58,6 +59,13 @@ var StyleScreen = React.createClass({
           })
           .catch((error) => {
             console.log("数据加载出错");
+            AlertIOS.alert(
+              '提示',
+              '请检查您的网络连接是否正常',
+              [
+                {text: '好的', onPress: () => console.log('Report Success!')},
+              ]
+            );
           })
           .done();  
       }
@@ -73,6 +81,13 @@ var StyleScreen = React.createClass({
           })
           .catch((error) => {
             console.log("数据加载出错");
+            AlertIOS.alert(
+              '提示',
+              '请检查您的网络连接是否正常',
+              [
+                {text: '好的', onPress: () => console.log('Report Success!')},
+              ]
+            );
           })
           .done();
       }

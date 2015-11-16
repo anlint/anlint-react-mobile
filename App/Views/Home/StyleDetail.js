@@ -17,12 +17,51 @@ var {
   PixelRatio,
   NavigatorIOS,
   TouchableHighlight,
-  Dimensions
+  Dimensions,
+  TimerMixin,
+  AlertIOS
 } = React;
 
 var deviceWidth = Dimensions.get('window').width;
 
+
+var report_base_url = 'https://www.anlint.com/api/v1/lint/getone/';
+
 var StyleDetail = React.createClass({
+  mixins: [TimerMixin],
+  data: {index: 0, list:[]},
+  lastdate: String,
+
+  sendReport(id) {
+    // fetch Data
+    fetch(report_base_url + id + '/devote')
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.cache(responseData);
+        this.setState({
+          loaded: true,
+        });
+      })
+      .catch((error) => { 
+        console.log('report error : ' + report_base_url + id + '/devote'); 
+        console.log(error);
+      })
+      .done( () => {
+        AlertIOS.alert(
+          '通知',
+          '举报成功，举报信息已提交审核',
+          [
+            {text: '好的', onPress: () => console.log('Report Success!')},
+          ]
+        );
+      });
+  },
+
+  cache(item) {
+    console.log(item.msg);
+  },
+
+
   render() {
     var data = this.props.rowData;
     var dayDiff = (Date.now() - new Date(data.create_at)) / (24*3600*1000);
@@ -46,6 +85,12 @@ var StyleDetail = React.createClass({
           <Text> {descriptionTab} </Text>
           <Image style={styles.detailPic} source={{uri: data.pic}} />
           <Text style={styles.summary}> {data.text} </Text>
+          <View style={styles.footContainer}>
+            <TouchableHighlight style={styles.wrapper}
+              onPress={() => this.sendReport(data.id)}>
+              <Text style={styles.report}>举报</Text>
+            </TouchableHighlight>
+          </View>
           <View style={{height: 65}} />
         </View>
       </ScrollView>       
@@ -99,6 +144,18 @@ var styles = StyleSheet.create({
     paddingRight: 10,
     marginTop: 10
   },
+  footContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 10
+
+  },
+  report: {
+    color: '#3f3f3f',
+    fontSize: 12,
+    width: 30
+  }
 });
 
 module.exports = StyleDetail;

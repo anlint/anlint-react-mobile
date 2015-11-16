@@ -16,7 +16,8 @@ var {
   PixelRatio,
   NavigatorIOS,
   TouchableHighlight,
-  Dimensions
+  Dimensions,
+  AlertIOS
 } = React;
 
 var RefreshableListView = require('react-native-refreshable-listview');
@@ -56,8 +57,14 @@ var LifeScreen = React.createClass({
         })
         .catch((error) => {
           console.log("数据加载出错");
-        })
-        .done();  
+          AlertIOS.alert(
+            '提示',
+            '请检查您的网络连接是否正常',
+            [
+              {text: '好的', onPress: () => console.log('Report Success!')},
+            ]
+          ); 
+        }).done();  
     }
     else {
       console.log(base_api_url + this.lastdate);
