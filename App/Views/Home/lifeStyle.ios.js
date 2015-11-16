@@ -21,8 +21,8 @@ var ScrollableTabView = require('react-native-scrollable-tab-view');
 var RefreshableListView = require('react-native-refreshable-listview');
 var deviceWidth = Dimensions.get('window').width;
 
-var LifeScreen = require('./LifeScreen');
-var StyleScreen = require('./StyleScreen');
+var LifeScreen = require('./lifeScreen');
+var StyleScreen = require('./styleScreen');
 var CustomTabBar = require('./CustomTabBar');
 
 var RefreshInfiniteListView = require('../Components/RefreshInfiniteListView');
@@ -39,10 +39,10 @@ var lifeStyle = React.createClass({
   },
   render() {
     return(
-      <ScrollableTabView 
+      <ScrollableTabView
         renderTabBar = {() => <CustomTabBar someProp={'here'} />}
         sceneContainerStyle = {styles.scence}
-        edgeHitWidth = {99} 
+        edgeHitWidth = {99}
         scrollsToTop={true}>
 
         <LifeScreen tabLabel="生活" navigator={this.props.navigator}/>

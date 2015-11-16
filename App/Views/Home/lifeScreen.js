@@ -42,31 +42,6 @@ var LifeScreen = React.createClass({
   lastdate: String,
 
   getData(init) {
-    var total = 10;
-    if (init) {
-      this.data.index = 0;
-
-      // fetch Data
-      fetch(api_url)
-        .then((response) => response.json())
-        .then((responseData) => {
-          this.cache(responseData.Servs);
-          this.setState({
-            loaded: true,
-          });
-        })
-        .catch((error) => {
-          console.log("数据加载出错");
-          AlertIOS.alert(
-            '提示',
-            '请检查您的网络连接是否正常',
-            [
-              {text: '好的', onPress: () => console.log('Report Success!')},
-            ]
-          ); 
-        }).done();  
-    }
-    else {
       console.log(base_api_url + this.lastdate);
       fetch(init?api_url:(base_api_url + this.lastdate))
         .then((response) => response.json())
@@ -82,9 +57,14 @@ var LifeScreen = React.createClass({
           });
         })
         .catch((error) => {
-          console.log(error);
-        })
-        .done();
+          AlertIOS.alert(
+            '提示',
+            '请检查您的网络连接是否正常',
+            [
+              {text: '好的', onPress: () => console.log('Report Success!')},
+            ]
+          );
+        }).done();
 
   },
   // 自定义函数处理网络获取数据，将数据放入全局变量CACHE
