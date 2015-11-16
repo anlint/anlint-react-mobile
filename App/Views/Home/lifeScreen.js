@@ -106,6 +106,7 @@ var LifeScreen = React.createClass({
       }
   },
   onRefresh() {
+    CACHE = [];
     this.getData(true);
     this.setTimeout(()=>{
         this.list.hideHeader();
