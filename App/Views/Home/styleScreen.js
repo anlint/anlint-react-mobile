@@ -16,7 +16,8 @@ var {
   PixelRatio,
   NavigatorIOS,
   TouchableHighlight,
-  Dimensions
+  Dimensions,
+  AlertIOS
 } = React;
 
 
@@ -46,6 +47,29 @@ var StyleScreen = React.createClass({
         fetch(init?api_url:(base_api_url + this.lastdate))
           .then((response) => response.json())
           .then((responseData) => {
+            this.cache(responseData.Lints);
+            this.setState({
+              loaded: true,
+            });
+          })
+          .catch((error) => {
+            console.log("数据加载出错");
+            AlertIOS.alert(
+              '提示',
+              '请检查您的网络连接是否正常',
+              [
+                {text: '好的', onPress: () => console.log('Report Success!')},
+              ]
+            );
+          })
+          .done();  
+      }
+      else {
+        console.log(base_api_url + this.lastdate);
+        fetch(base_api_url + this.lastdate)
+          .then((response) => response.json())
+          .then((responseData) => {
+            this.cache(responseData.Lints);
             if(responseData.Lints){
               if(init) CACHE = [];
               this.cache(responseData.Lints);
@@ -58,6 +82,13 @@ var StyleScreen = React.createClass({
           })
           .catch((error) => {
             console.log("数据加载出错");
+            AlertIOS.alert(
+              '提示',
+              '请检查您的网络连接是否正常',
+              [
+                {text: '好的', onPress: () => console.log('Report Success!')},
+              ]
+            );
           })
           .done();
 
