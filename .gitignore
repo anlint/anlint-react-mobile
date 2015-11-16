@@ -29,6 +29,7 @@ project.xcworkspace
 ## Build generated
 build/
 DerivedData
+ios/main.jsbundle
 
 ## Various settings
 *.pbxuser

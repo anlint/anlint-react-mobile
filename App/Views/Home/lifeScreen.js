@@ -33,7 +33,7 @@ var api_url = 'https://www.anlint.com/api/v1/serv/getall';
 var base_api_url = 'https://www.anlint.com/api/v1/serv/getall?lastdate=';
 
 // assumes immutable objects
-var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}) 
+var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
 var CACHE = [];
 
 var LifeScreen = React.createClass({
@@ -68,30 +68,32 @@ var LifeScreen = React.createClass({
     }
     else {
       console.log(base_api_url + this.lastdate);
-      fetch(base_api_url + this.lastdate)
+      fetch(init?api_url:(base_api_url + this.lastdate))
         .then((response) => response.json())
         .then((responseData) => {
-          this.cache(responseData.Servs);
+          if(responseData.Servs){
+            if(init) CACHE = [];
+            this.cache(responseData.Servs);
+          }else{
+            //notify no data
+          }
           this.setState({
             loaded: true,
           });
         })
         .catch((error) => {
-          console.log("数据加载出错");
+          console.log(error);
         })
         .done();
-    }
-  },
 
+  },
   // 自定义函数处理网络获取数据，将数据放入全局变量CACHE
   cache: function(items) {
     for (var i in items) {
       CACHE.push(items[i]);
     }
-
     // 获取最后一篇文章的时间并转化为标准格式
     this.lastdate = new Date(items[items.length - 1].create_at).toISOString();
-    // console.log(this.lastdate);
 
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(CACHE),
@@ -141,7 +143,7 @@ var LifeScreen = React.createClass({
           renderRow={this.renderRow}
           initialListSize={30}
           scrollEventThrottle={10}
-          style={{backgroundColor:'transparent'/*,top:100, left:10, width:200, height:300, position:'absolute'*/}}
+          style={{backgroundColor:'transparent'}}
           onRefresh = {this.onRefresh}
           onInfinite = {this.onInfinite} >
         </RefreshInfiniteListView>
@@ -151,7 +153,6 @@ var LifeScreen = React.createClass({
   },
 
   renderRow: function(rowData) {
-    //var movie = {title:'美食 | 别辜负冰淇淋的一片盛情', date:'2015-09-18', posters: {thumbnail: 'https://dn-anlint0.qbox.me/FseCOstTejRXgca9NYcwW2KE4ueA'}}
     return (
       <TouchableHighlight onPress={() => this._onPress(rowData.title, rowData.link)}
           underlayColor='#dddddd'>
@@ -162,7 +163,6 @@ var LifeScreen = React.createClass({
               <Text style={styles.topicTitle} numberOfLines={2}>{rowData.title}</Text>
             </View>
           </View>
-          <View style={styles.separator}/>
         </View>
       </TouchableHighlight>
     );
@@ -232,7 +232,7 @@ var styles = StyleSheet.create({
   thumbnail: {
     //width: 170 * PixelRatio.get(),
     //height: 100 * PixelRatio.get(),
-    width: deviceWidth - 32,
+    width: deviceWidth - 18,
     height: 150,
   },
   separator: {
@@ -258,6 +258,7 @@ var styles = StyleSheet.create({
     borderRadius: 0
   },
   topicTitle: {
+    padding: 5,
     fontSize: 16,
     lineHeight: 20,
     fontWeight: 'bold',
@@ -270,8 +271,10 @@ var styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#fff',
     borderColor: 'rgba(0,0,0,0.1)',
-    margin: 5,
-    padding: 10,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+    padding: 0,
     shadowColor: '#ccc',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.5,
