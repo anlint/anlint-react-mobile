@@ -30,6 +30,7 @@ project.xcworkspace
 build/
 DerivedData
 ios/main.jsbundle
+main.jsbundle
 
 ## Various settings
 *.pbxuser
