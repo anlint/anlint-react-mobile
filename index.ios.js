@@ -23,6 +23,8 @@ var RefreshableListView = require('react-native-refreshable-listview');
 var deviceWidth = Dimensions.get('window').width;
 
 var LifeStyle = require('./App/Views/Home/lifeStyle')
+var LifeScreen = require('./App/Views/Home/lifeScreen')
+
 
 var anlint = React.createClass({
   getInitialState: function() {

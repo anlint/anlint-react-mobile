@@ -93,6 +93,7 @@ var StyleScreen = React.createClass({
         }
     },
     onRefresh() {
+      CACHE = [];
       this.getData(true);
       this.setTimeout(()=>{
           this.list.hideHeader();
